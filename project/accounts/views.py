@@ -1,16 +1,15 @@
 # Create your views here.
+from django.http import HttpResponse
+from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import generics
-from rest_framework.decorators import api_view
 from django.shortcuts import render
 from .models import User, Patient, Counselor
 from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
 from .forms import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
-from django.http import HttpResponse
 
 # class LogoutAPIView(APIView):
 #     # permission_classes = (IsAuthenticated,)
@@ -23,16 +22,18 @@ from django.http import HttpResponse
 #         )
 
 
-class UserRegistration(generics.CreateAPIView):
+class SignUpView(APIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
 
     def get(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = User.objects.create(serializer)
-            return render(request, template_name='registration/signup.html')
+        return render(request, 'registration/signup.html')
+
+    def post(self, request):
+        # request.user.auth_token.delete()
+        print(request.data)
+        return render(request, 'registration/signup.html')
 
 
 # class SignUpView(APIView):
