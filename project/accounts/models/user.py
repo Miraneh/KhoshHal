@@ -21,11 +21,3 @@ class User(AbstractUser):
     address = models.TextField(blank=True, null=True)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
-
-
-class Patient(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-
-
-class Counselor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

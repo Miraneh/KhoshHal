@@ -4,7 +4,9 @@ from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import User
+from .models.user import User
+from .models.counselor import Counselor
+from .models.patient import Patient
 from .forms import PatientSignUpForm, CounselorSignUpForm
 
 
@@ -19,7 +21,7 @@ class LogInView(generic.CreateView):
 
 
 class PatientSignUpView(generic.CreateView):
-    model = User
+    model = Patient
     form_class = PatientSignUpForm
     template_name = 'registration/signup_form.html'  # TODO
 
@@ -34,7 +36,7 @@ class PatientSignUpView(generic.CreateView):
 
 
 class CounselorSignUpView(generic.CreateView):
-    model = User
+    model = Counselor
     form_class = CounselorSignUpForm
     template_name = 'registration/signup_form.html'  # TODO
 
