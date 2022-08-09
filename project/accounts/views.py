@@ -4,9 +4,9 @@ from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from .models.user import User
-from .models.counselor import Counselor
-from .models.patient import Patient
+from .models import User
+from .models import Counselor
+from .models import Patient
 from .forms import PatientSignUpForm, CounselorSignUpForm
 
 

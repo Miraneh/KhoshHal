@@ -1,15 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
-from .models.user import User
-from .models.patient import Patient
-from .models.counselor import Counselor
+from .models import User, Patient, Counselor
 
 
-class PatientSignUpForm(UserCreationForm):
+class PatientSignUpForm(forms.Form):
     class Meta(UserCreationForm.Meta):
-        model = User
-        fields = ('first_name', 'last_name', 'email', 'password', 'phone')
+        model = Patient
+        # fields = ('first_name', 'last_name', 'email', 'password','repeat')#, 'phone')
 
     @transaction.atomic
     def save(self):
@@ -20,9 +18,9 @@ class PatientSignUpForm(UserCreationForm):
         return user
 
 
-class CounselorSignUpForm(UserCreationForm):
+class CounselorSignUpForm(forms.Form):
     class Meta(UserCreationForm.Meta):
-        model = User
+        model = Counselor
         fields = ('first_name', 'last_name', 'email', 'password', 'phone', 'specialty')
 
     def save(self, commit=True):
