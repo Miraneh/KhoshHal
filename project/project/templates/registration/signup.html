@@ -1,6 +1,4 @@
-{% extends "base.html" %} {% load static %} 
-{% block title %}Sign Up{% endblock%}
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block title %}Sign Up{%endblock%} {% block content %}
 <section class="banner_part">
   <div class="container">
     <div class="row align-items-center">
@@ -9,7 +7,7 @@
           <section class="vh-100 my-5">
             <div class="container-fluid h-custom">
               <div
-                class="row d-flex justify-content-center align-items-center h-100"
+                class="row d-flex justify-content-center h-100"
               >
                 <div class="col-md-9 col-lg-6 col-xl-5">
                   <img
@@ -18,8 +16,29 @@
                     alt="Sample image"
                   />
                 </div>
-                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                  <form method="post">
+                <div class="col-md-8 col-lg-6 col-xl-4">
+                  <toggle>
+                    <div class="row justify-content-center">
+                      <button
+                              id="patient-b"
+                        type="button"
+                        class="btn btn-outline-primary col-4 mr-2"
+                        style="padding-left: 1rem; padding-right: 1rem"
+                      >
+                        Patient
+                      </button>
+                      <button
+                        id="counselor-b"
+                        type="button"
+                        class="btn btn-outline-primary col-4 ml-2"
+                        style="padding-left: 1rem; padding-right: 1rem"
+                      >
+                        Counselor
+                      </button>
+                    </div>
+                  </toggle>
+                  <div id="signup-form" class="my-5">
+                  <form method="post" id="patient-f" style="display: none">
                     <!-- Name & Family Name -->
                     <div class="form-outline mb-4">
                       <div class="row">
@@ -79,16 +98,94 @@
                       </button>
                     </div>
                   </form>
+                  <form method="post" id="counselor-f" style="display: none">
+                    <!-- Name & Family Name -->
+                    <div class="form-outline mb-4">
+                      <div class="row">
+                        <div class="col">
+                          <label class="form-label">First Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="First name"
+                          />
+                        </div>
+                                                <div class="col">
+                                                  <label class="form-label">Last Name</label>
+                                                  <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    placeholder="Last name"
+                                                  />
+                                                </div>
+                      </div>
+                    </div>
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                      <label class="form-label">Email address</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        placeholder="Enter a valid email address"
+                      />
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-3">
+                      <label class="form-label">Password</label>
+                      <input
+                        type="password"
+                        class="form-control form-control"
+                        placeholder="Password"
+                      />
+                    </div>
+                    <div class="form-outline mb-3">
+                      <label class="form-label">Re-Enter Password</label>
+                      <input
+                        type="password"
+                        class="form-control form-control"
+                        placeholder="Password"
+                      />
+                    </div>
+                    <div class="form-outline">
+                      <label class="form-label">Please upload your doctorate certificate</label>
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile01"
+                               aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      </div>
+                    </div>
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-lg"
+                        style="padding-left: 2.5rem; padding-right: 2.5rem"
+                      >
+                        Sign Up
+                      </button>
+                    </div>
+                  </form>
+                  </div>
                 </div>
               </div>
             </div>
           </section>
         </div>
       </section>
-      {% endblock %}
     </div>
   </div>
 </section>
+<script>
+  $("#patient-b").click(function (){
+    $("#counselor-f").hide();
+    $("#patient-f").show();
+  });
+  $("#counselor-b").click(function (){
+    $("#patient-f").hide();
+    $("#counselor-f").show();
+  });
+</script>
+{% endblock %}
 
 <!--  <h2>Sign up</h2>-->
 <!--  <form method="post">-->
