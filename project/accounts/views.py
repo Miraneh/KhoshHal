@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from django.shortcuts import render
-from project.accounts.models import User, Patient, Counselor
+from .models import User, Patient, Counselor
 from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
 from .forms import *
 
