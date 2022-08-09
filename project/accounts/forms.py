@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
-from .models import User, Patient, Counselor
+from project.accounts.models import Patient, Counselor
 
 
 class PatientSignUpForm(forms.Form):

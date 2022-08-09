@@ -1,50 +1,64 @@
 # Create your views here.
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.views import generic
-from .models import User
-from .models import Counselor
-from .models import Patient
-from .forms import PatientSignUpForm, CounselorSignUpForm
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework import generics
+from rest_framework.decorators import api_view
+from django.shortcuts import render
+from project.accounts.models import User, Patient, Counselor
+from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
+from .forms import *
+
+# class LogoutAPIView(APIView):
+#     # permission_classes = (IsAuthenticated,)
+#
+#     def post(self, request):
+#         request.user.auth_token.delete()
+#         return Response(
+#             data={'message': f'Bye {request.user.username}!'},
+#             status=status.HTTP_204_NO_CONTENT
+#         )
 
 
-class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy("login")
+class UserRegistration(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    @api_view(['POST'])
+    def create_auth(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = User.objects.create(serializer)
+            return render(request, 'registration/signup.html', context=user)
+
+
+class SignUpView(APIView):
     template_name = "registration/signup.html"
 
 
-class LogInView(generic.CreateView):
+class LogInView(APIView):  # TODO
     template_name = "registration/login.html"
 
 
-class PatientSignUpView(generic.CreateView):
+class PatientSignUpView(APIView):
     model = Patient
     form_class = PatientSignUpForm
-    template_name = 'registration/signup_form.html'  # TODO
+    template_name = 'registration/signup_form.html'
 
-    def get_context_data(self, **kwargs):
-        kwargs['user_type'] = "Patient"
-        return super().get_context_data(**kwargs)
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('patients:profile')  # TODO
+    def post(self, request):
+        serializer = PatientSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=self.request.user)
+        return Response(status=status.HTTP_201_CREATED)
 
 
-class CounselorSignUpView(generic.CreateView):
+class CounselorSignUpView(APIView):
     model = Counselor
     form_class = CounselorSignUpForm
     template_name = 'registration/signup_form.html'  # TODO
 
-    def get_context_data(self, **kwargs):
-        kwargs['user_type'] = "Counselor"
-        return super().get_context_data(**kwargs)
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('counselor:profile')  # TODO
+    def post(self, request):
+        serializer = CounselorSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=self.request.user)
+        return Response(status=status.HTTP_201_CREATED)
