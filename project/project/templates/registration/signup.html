@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% load static %} {% block title %}Sign Up{%endblock%} {% block content %}
+{% extends "base.html" %} {% load static %} 
+{% block title %}Sign Up{%endblock%}
+{% block content %}
 <section class="banner_part">
   <div class="container">
     <div class="row align-items-center">
@@ -6,9 +8,7 @@
         <div class="container">
           <section class="vh-100 my-5">
             <div class="container-fluid h-custom">
-              <div
-                class="row d-flex justify-content-center h-100"
-              >
+              <div class="row d-flex justify-content-center h-100">
                 <div class="col-md-9 col-lg-6 col-xl-5">
                   <img
                     src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
@@ -20,7 +20,7 @@
                   <toggle>
                     <div class="row justify-content-center">
                       <button
-                              id="patient-b"
+                        id="patient-b"
                         type="button"
                         class="btn btn-outline-primary col-4 mr-2"
                         style="padding-left: 1rem; padding-right: 1rem"
@@ -38,138 +38,175 @@
                     </div>
                   </toggle>
                   <div id="signup-form" class="my-5">
-                  <form method="post" id="patient-f" style="display: none">
-                  {% csrf_token %}
-<!--                    {{ form.as_p }}-->
-                    <!-- Name & Family Name -->
-                    <div class="form-outline mb-4">
-                      <div class="row">
-                        <div class="col">
-                          <label class="form-label">First Name</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="First name"
-                            name="first_name"
-                          />
-                        </div>
-                        <div class="col">
-                          <label class="form-label">Last Name</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Last name"
-                            name="last_name"
-                          />
+                    <form method="post" id="patient-f" style="display: none">
+                      {% csrf_token %}
+                      <!-- Name & Family Name -->
+                      <div class="form-outline mb-4">
+                        <div class="row">
+                          <div class="col">
+                            <label class="form-label">First Name</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="First name"
+                              name="first_name"
+                            />
+                          </div>
+                          <div class="col">
+                            <label class="form-label">Last Name</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Last name"
+                              name="last_name"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <!-- Email input -->
-                    <div class="form-outline mb-4">
-                      <label class="form-label">Email address</label>
-                      <input
-                        type="email"
-                        class="form-control"
-                        placeholder="Enter a valid email address"
-                        name="email"
-                      />
-                    </div>
-                    <!-- Password input -->
-                    <div class="form-outline mb-3">
-                      <label class="form-label">Password</label>
-                      <input
-                        type="password"
-                        class="form-control form-control"
-                        placeholder="Password"
-                        name="password"
-                      />
-                    </div>
-                    <div class="form-outline mb-3">
-                      <label class="form-label">Re-Enter Password</label>
-                      <input
-                        type="password"
-                        class="form-control form-control"
-                        placeholder="Password"
-                        name="repeat"
-                      />
-                    </div>
-                    <div class="text-center text-lg-start mt-4 pt-2">
-                      <button
-                        type="submit"
-                        class="btn btn-primary btn-lg"
-                        style="padding-left: 2.5rem; padding-right: 2.5rem"
-                      >
-                        Sign Up
-                      </button>
-                    </div>
-                  </form>
-                  <form method="post" id="counselor-f" style="display: none">
-                    <!-- Name & Family Name -->
-                    <div class="form-outline mb-4">
-                      <div class="row">
-                        <div class="col">
-                          <label class="form-label">First Name</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="First name"
-                          />
+                      <!-- Email input -->
+                      <div class="form-outline mb-4">
+                        <label class="form-label">Email address</label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          placeholder="Enter a valid email address"
+                          name="email"
+                        />
+                      </div>
+                      <!-- Phone input -->
+                      <div class="form-outline mb-4">
+                        <label class="form-label">Phone</label>
+                        <input
+                                type="tel"
+                                class="form-control"
+                                placeholder="Enter phone number like 0912-345-6789"
+                                name="phone"
+                                pattern="0[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        />
+                      </div>
+                      <!-- Password input -->
+                      <div class="form-outline mb-3">
+                        <label class="form-label">Password</label>
+                        <input
+                          type="password"
+                          class="form-control form-control"
+                          placeholder="Password"
+                          name="password"
+                        />
+                      </div>
+                      <div class="form-outline mb-3">
+                        <label class="form-label">Re-Enter Password</label>
+                        <input
+                          type="password"
+                          class="form-control form-control"
+                          placeholder="Password"
+                          name="repeat"
+                        />
+                      </div>
+                      <div class="text-center text-lg-start mt-4 pt-2">
+                        <button
+                          type="submit"
+                          class="btn btn-primary btn-lg"
+                          style="padding-left: 2.5rem; padding-right: 2.5rem"
+                        >
+                          Sign Up
+                        </button>
+                      </div>
+                    </form>
+                    <form method="post" id="counselor-f" style="display: none">
+                      {% csrf_token %}
+                      <!-- Name & Family Name -->
+                      <div class="form-outline mb-4">
+                        <div class="row">
+                          <div class="col">
+                            <label class="form-label">First Name</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="First name"
+                              name="first_name"
+                            />
+                          </div>
+                          <div class="col">
+                            <label class="form-label">Last Name</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Last name"
+                              name="last_name"
+                            />
+                          </div>
                         </div>
-                                                <div class="col">
-                                                  <label class="form-label">Last Name</label>
-                                                  <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    placeholder="Last name"
-                                                  />
-                                                </div>
                       </div>
-                    </div>
-                    <!-- Email input -->
-                    <div class="form-outline mb-4">
-                      <label class="form-label">Email address</label>
-                      <input
-                        type="email"
-                        class="form-control"
-                        placeholder="Enter a valid email address"
-                      />
-                    </div>
-
-                    <!-- Password input -->
-                    <div class="form-outline mb-3">
-                      <label class="form-label">Password</label>
-                      <input
-                        type="password"
-                        class="form-control form-control"
-                        placeholder="Password"
-                      />
-                    </div>
-                    <div class="form-outline mb-3">
-                      <label class="form-label">Re-Enter Password</label>
-                      <input
-                        type="password"
-                        class="form-control form-control"
-                        placeholder="Password"
-                      />
-                    </div>
-                    <div class="form-outline">
-                      <label class="form-label">Please upload your doctorate certificate</label>
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputGroupFile01"
-                               aria-describedby="inputGroupFileAddon01">
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      <!-- Email input -->
+                      <div class="form-outline mb-4">
+                        <label class="form-label">Email address</label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          placeholder="Enter a valid email address"
+                          name="email"
+                        />
                       </div>
-                    </div>
-                    <div class="text-center text-lg-start mt-4 pt-2">
-                      <button
-                        type="button"
-                        class="btn btn-primary btn-lg"
-                        style="padding-left: 2.5rem; padding-right: 2.5rem"
-                      >
-                        Sign Up
-                      </button>
-                    </div>
-                  </form>
+                      <!-- Phone input -->
+                      <div class="form-outline mb-4">
+                        <label class="form-label">Phone</label>
+                        <input
+                                type="tel"
+                                class="form-control"
+                                placeholder="Enter phone number like 0912-345-6789"
+                                name="phone"
+                                pattern="0[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        />
+                      </div>
+                      <!-- Password input -->
+                      <div class="form-outline mb-3">
+                        <label class="form-label">Password</label>
+                        <input
+                          type="password"
+                          class="form-control form-control"
+                          placeholder="Password"
+                          name="password"
+                        />
+                      </div>
+                      <div class="form-outline mb-3">
+                        <label class="form-label">Re-Enter Password</label>
+                        <input
+                          type="password"
+                          class="form-control form-control"
+                          placeholder="Password"
+                          name="repeat"
+                        />
+                      </div>
+                      <div class="form-outline">
+                        <label class="form-label"
+                          >Please upload your doctorate certificate</label
+                        >
+                        <div class="custom-file">
+                          <input
+                            type="file"
+                            class="custom-file-input"
+                            id="inputGroupFile01"
+                            aria-describedby="inputGroupFileAddon01"
+                            name="file"
+                          />
+                          <label
+                            class="custom-file-label"
+                            for="inputGroupFile01"
+                            >Choose file</label
+                          >
+                        </div>
+                      </div>
+                      <div class="text-center text-lg-start mt-4 pt-2">
+                        <button
+                          type="submit"
+                          class="btn btn-primary btn-lg"
+                          style="padding-left: 2.5rem; padding-right: 2.5rem"
+                        >
+                          Sign Up
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -181,20 +218,13 @@
   </div>
 </section>
 <script>
-  $("#patient-b").click(function (){
+  $("#patient-b").click(function () {
     $("#counselor-f").hide();
     $("#patient-f").show();
   });
-  $("#counselor-b").click(function (){
+  $("#counselor-b").click(function () {
     $("#patient-f").hide();
     $("#counselor-f").show();
   });
 </script>
 {% endblock %}
-
-<!--  <h2>Sign up</h2>-->
-<!--  <form method="post">-->
-<!--    {% csrf_token %}-->
-<!--    {{ form.as_p }}-->
-<!--    <button type="submit">Sign Up</button>-->
-<!--  </form>-->
