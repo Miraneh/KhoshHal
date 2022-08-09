@@ -5,9 +5,12 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from django.shortcuts import render
-from project.accounts.models import User, Patient, Counselor
+from .models import User, Patient, Counselor
 from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
 from .forms import *
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.http import HttpResponse
 
 # class LogoutAPIView(APIView):
 #     # permission_classes = (IsAuthenticated,)
@@ -23,17 +26,20 @@ from .forms import *
 class UserRegistration(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
 
-    @api_view(['POST'])
-    def create_auth(self, request):
+    def get(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = User.objects.create(serializer)
-            return render(request, 'registration/signup.html', context=user)
+            return render(request, template_name='registration/signup.html')
 
 
-class SignUpView(APIView):
-    template_name = "registration/signup.html"
+# class SignUpView(APIView):
+#     permission_classes = (AllowAny,)
+#     template_name = "registration/signup.html"
+#
+
 
 
 class LogInView(APIView):  # TODO

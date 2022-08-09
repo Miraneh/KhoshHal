@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from project.accounts.models import User, Patient, Counselor
+from .models import User, Patient, Counselor
 
 
 class UserSerializer(serializers.ModelSerializer):
