@@ -1,15 +1,15 @@
 # Create your views here.
-from django.http import HttpResponse
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework import generics
-from django.shortcuts import render
 from .models import User, Patient, Counselor
+from django.contrib.auth import authenticate, login
 from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
 from .forms import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.shortcuts import render, redirect
+from rest_framework.authtoken.models import Token
+
 
 # class LogoutAPIView(APIView):
 #     # permission_classes = (IsAuthenticated,)
@@ -42,14 +42,29 @@ class SignUpView(APIView):
 #
 
 
-
 class LogInView(APIView):  # TODO
     template_name = "registration/login.html"
+
+    def post(self, request, *args, **kwargs):
+        # serializer = LoginSerializers(data=request.data, context={'request': request})
+        # serializer.is_valid(raise_exception=True)
+        # user = serializer.validated_data['user']
+        # token, created = Token.objects.get_or_create(user=user)
+        # return Response({"status": status.HTTP_200_OK, "Token": token.key})
+
+        email = request.POST.get('email')  # Get email value from form
+        password = request.POST.get('password')  # Get password value from form
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+        # t   ype_obj = user_type.objects.get(user=user)
+        else:  # Invalid email or password. Handle as you wish
+            return redirect('home')
 
 
 class PatientSignUpView(APIView):
     model = Patient
-    form_class = PatientSignUpForm
     template_name = 'registration/signup_form.html'
 
     def post(self, request):
@@ -61,8 +76,7 @@ class PatientSignUpView(APIView):
 
 class CounselorSignUpView(APIView):
     model = Counselor
-    form_class = CounselorSignUpForm
-    template_name = 'registration/signup_form.html'  # TODO
+    template_name = 'registration/signup_form.html'
 
     def post(self, request):
         serializer = CounselorSerializer(data=request.data)
