@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% load static %}
-{% block title %}Sign Up{% endblock%}
+{% block title %}Login{% endblock%}
 {% block content %}
 <section class="banner_part">
   <div class="container">
@@ -19,7 +19,8 @@
                   />
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                  <form>
+                  <form method="post">
+                    {% csrf_token %}
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                       <input
@@ -66,7 +67,7 @@
 
                     <div class="text-center text-lg-start mt-4 pt-2">
                       <button
-                        type="button"
+                        type="submit"
                         class="btn btn-primary btn-lg"
                         style="padding-left: 2.5rem; padding-right: 2.5rem"
                       >
@@ -84,20 +85,7 @@
           </section>
         </div>
       </section>
-      {% endblock %}
     </div>
   </div>
 </section>
-
-<!--{% extends 'base.html' %}-->
-
-<!--{% block title %}Login{% endblock %}-->
-
-<!--{% block content %}-->
-<!--<h2>Log In</h2>-->
-<!--<form method="post">-->
-<!--  {% csrf_token %}-->
-<!--  {{ form.as_p }}-->
-<!--  <button type="submit">Log In</button>-->
-<!--</form>-->
-<!--{% endblock %}-->
+{% endblock %}
