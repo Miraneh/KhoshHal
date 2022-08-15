@@ -35,6 +35,9 @@
                       >
                         Counselor
                       </button>
+                      {% if request.method == 'POST' %}
+                      <label class="form-label my-3 text-danger">{{ field }}: {{ error }}</label>
+                      {% endif %}
                     </div>
                   </toggle>
                   <div id="signup-form" class="my-5">
