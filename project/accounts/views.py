@@ -12,14 +12,17 @@ from rest_framework.authtoken.models import Token
 
 class SignUpView(APIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
     permission_classes = (AllowAny,)
+    serializer_class = UserSerializer
 
     def get(self, request):
         return render(request, 'registration/signup.html')
 
     def post(self, request):
-        # request.user.auth_token.delete()
+        serializer = UserSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.create(validated_data= serializer.validated_data)
+        # token, created = Token.objects.get_or_create(user=user)
         print(request.data)
         return render(request, 'registration/signup.html')
 
