@@ -1,6 +1,7 @@
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework import status
 from .models import User, Patient, Counselor
 from django.contrib.auth import authenticate, login
@@ -8,6 +9,8 @@ from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render, redirect
 from rest_framework.authtoken.models import Token
+from . import serializers
+from .permissions import IsPatient, IsCounselor
 
 
 class SignUpView(APIView):
@@ -51,3 +54,11 @@ class ProfileView(APIView):
     def get(self, request):
         print("hey hey")
         return render(request, "registration/profile.html")
+
+
+class EditMedicalInformationView(generics.UpdateAPIView):
+    serializer_class = serializers.EditMedicalInfoSerializer
+    permission_classes = (IsCounselor,)
+
+    def get_object(self):
+        return self.request.user

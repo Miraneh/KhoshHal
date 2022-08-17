@@ -27,6 +27,7 @@ class Counselor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     specialty = models.CharField(max_length=128)
     ME_number = models.PositiveIntegerField()
+    verified = models.BooleanField(default=False)
 
 
 class Patient(models.Model):
@@ -34,3 +35,7 @@ class Patient(models.Model):
 
     def __str__(self):
         return self.user.email
+
+
+class MedicalInformation(models.Model):
+    upload = models.FileField(upload_to='counselor_information_uploads/')

@@ -1,7 +1,11 @@
 from rest_framework import serializers
-from .models import User, Patient, Counselor
+from .models import User, Patient, Counselor, MedicalInformation
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from django.db import models
+from django.contrib.auth import get_user_model
+
+person = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -56,3 +60,21 @@ class CounselorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Counselor
         fields = ("specialty", "ME_number")
+
+
+class EditMedicalInfoSerializer(serializers.ModelSerializer):
+    upload = serializers.SerializerMethodField()
+
+    class Meta:
+        model = get_user_model()
+        fields = [
+            'emails',
+        ]
+
+    def update(self, instance, validated_data):
+        upload = instance.upload
+        upload.save()
+        return instance
+
+
+
