@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import User, Patient, Counselor, Appointment
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
+import logging
 
 person = get_user_model()
 

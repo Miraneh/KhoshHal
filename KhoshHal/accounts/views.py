@@ -8,6 +8,17 @@ from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render
 from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework import generics, filters
+from .models import User, Patient, Counselor
+from django.contrib.auth import authenticate, login, logout
+from .serializers import UserSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.shortcuts import render
+from . import serializers
+from .permissions import IsPatient, IsCounselor
+from django.http import HttpResponse
+
 
 class SignUpView(APIView):
     queryset = User.objects.all()
@@ -29,6 +40,8 @@ class SignUpView(APIView):
         user = serializer.create(validated_data=serializer.validated_data)
 
         if "file" in request.data.keys():
+            if request.FILES["file"]:
+                print(type(request.FILES["file"]))
             serializer = CounselorSerializer(data=request.data, context={'request': request})
             serializer.create(validated_data={"user": user, "medical_information": request.data['file']})
         else:
