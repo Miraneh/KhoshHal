@@ -10,7 +10,6 @@ from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from ..KhoshHal import settings
 
 
 class SignUpView(APIView):
@@ -48,7 +47,7 @@ class LogInView(APIView):
             return HttpResponse("Wrong info")  # TODO
 
 
-@login_required(login_url="registration/login.html")
+# @login_required()
 class LogoutView(APIView):
 
     def get(self, request):
