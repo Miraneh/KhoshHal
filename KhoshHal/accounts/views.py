@@ -1,5 +1,5 @@
 # Create your views here.
-from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
+from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer
 from rest_framework.views import APIView
 from rest_framework import generics, filters
 from .models import User, Patient, Counselor
@@ -18,7 +18,6 @@ from django.shortcuts import render
 from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
-
 
 
 class SignUpView(APIView):
@@ -41,8 +40,6 @@ class SignUpView(APIView):
         user = serializer.create(validated_data=serializer.validated_data)
 
         if "file" in request.data.keys():
-            if request.FILES["file"]:
-                print(type(request.FILES["file"]))
             serializer = CounselorSerializer(data=request.data, context={'request': request})
             serializer.create(validated_data={"user": user, "medical_information": request.data['file']})
         else:
@@ -86,6 +83,22 @@ class ProfileView(APIView):
     def get(self, request):
         print("hey hey")
         return render(request, "registration/profile.html")
+
+
+class AddAppointment(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        serializer = AppointmentSerializer(data=request.data, context={'request': request})
+        try:
+            serializer.is_valid(raise_exception=True)
+        except:
+            first_error = list(serializer.errors)[0]
+            return render(request, "registration/profile.html",
+                          {'field': first_error, 'error': serializer.errors[first_error][0]})
+
+        appointment = serializer.create(validated_data=serializer.validated_data)
+        return render(request, 'registration/profile.html')
 
 
 # class EditFileView(generics.UpdateAPIView):
