@@ -1,7 +1,7 @@
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework import generics
-from .models import User, Patient, Counselor
+from .models import User, Patient, Counselor, Email
 from django.contrib.auth import authenticate, login
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -59,3 +59,19 @@ class EditFileView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class VerifyEmailView(generics.UpdateAPIView):
+    queryset = Email.objects.filter(verified=False)
+    serializer_class = serializers.VerifyEmailSerializer
+    permission_classes = (AllowAny,)
+    lookup_field = 'token'
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        expire_time = settings.ACTIVATION_EMAIL_EXPIRE_TIME
+        qs = qs.filter(last_sent__gt=timezone.now() - expire_time)
+        return qs

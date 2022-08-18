@@ -18,17 +18,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("username", "first_name", "last_name", "email", "password", "repeat")
 
     def validate(self, attrs):
-        print("boobbooo")
         if attrs['password'] != attrs['repeat']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         try:
-            logging.warning(attrs)
             attrs['email'] = Email(
                 **attrs['email'],
             )
             attrs['email'].save()
         except Exception as e:
-            print("koko")
             print(e)
 
         return attrs
@@ -50,12 +47,16 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
             counselor = Counselor.objects.create(user=user)
             counselor.save()
+            email.send_activation_email()
+            email.save()
         except KeyError:
             user.user_type = 1
             user.set_password(validated_data['password'])
             user.save()
             patient = Patient.objects.create(user=user)
             patient.save()
+            email.send_activation_email()
+            email.save()
 
         return user
 
@@ -84,8 +85,21 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = ("counselor", "date", "time")
 
     def validate(self, attrs):
-        attrs['Counselor'] = Email(
-            **attrs['email'],
+        attrs['Counselor'] = Counselor(
+            **attrs['Counselor'],
         )
 
         return attrs
+
+
+class VerifyEmailSerializer(serializers.ModelSerializer):
+    address = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Email
+        fields = ['address']
+
+    def update(self, instance, validated_data):
+        instance.verified = True
+        instance.save()
+        return instance
