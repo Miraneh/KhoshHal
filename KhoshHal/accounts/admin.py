@@ -5,7 +5,12 @@ from .models import Counselor, Patient
 
 @admin.register(Counselor)
 class CounselorAdmin(admin.ModelAdmin):
-    list_display = ["get_first_name", "get_last_name", "specialty", "ME_number", "medical_information", "verified", "get_email"]
+    list_display = ["get_username", "get_first_name", "get_last_name", "specialty", "ME_number", "medical_information", "verified", "get_email"]
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.admin_order_field = 'user__username'  # Allows column order sorting
+    get_username.short_description = 'Username'  # Renames column head
 
     def get_first_name(self, obj):
         return obj.user.first_name
@@ -25,7 +30,12 @@ class CounselorAdmin(admin.ModelAdmin):
 
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):
-    list_display = ["get_first_name", "get_last_name", "get_email"]
+    list_display = ["get_username", "get_first_name", "get_last_name", "get_email"]
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.admin_order_field = 'user__username'  # Allows column order sorting
+    get_username.short_description = 'Username'  # Renames column head
 
     def get_first_name(self, obj):
         return obj.user.first_name
