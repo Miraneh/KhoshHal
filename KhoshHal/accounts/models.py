@@ -108,7 +108,7 @@ class Counselor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     specialty = models.CharField(max_length=128)
     ME_number = models.PositiveIntegerField()
-    medial_information = models.FileField()
+    medial_information = models.FileField(blank=True, null=True)
     verified = models.BooleanField(default=False)
 
 
