@@ -58,13 +58,14 @@ class LogInView(APIView):
                           {"error": "Username or Password isn't correct"})
 
 
-# @login_required()
 class LogoutView(APIView):
 
     def get(self, request):
         return render(request, "registration/login.html")  # TODO
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return HttpResponse('Please login first')
         logout(request)
         return render(request, "index.html")
 
