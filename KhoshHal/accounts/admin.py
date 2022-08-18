@@ -5,7 +5,7 @@ from .models import Counselor, Patient
 
 @admin.register(Counselor)
 class CounselorAdmin(admin.ModelAdmin):
-    list_display = ["get_first_name", "get_last_name", "specialty", "ME_number", "medial_information", "verified", "get_email"]
+    list_display = ["get_first_name", "get_last_name", "specialty", "ME_number", "medical_information", "verified", "get_email"]
 
     def get_first_name(self, obj):
         return obj.user.first_name

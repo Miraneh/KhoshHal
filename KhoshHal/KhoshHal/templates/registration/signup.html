@@ -32,7 +32,7 @@
                 >
                   Counselor
                 </button>
-                {% if request.method == 'POST' and error != ''%}
+                {% if request.method == 'POST' and error%}
                 <label class="form-label my-3 text-danger">{{ field }}: {{ error }}</label>
                 {% endif %}
               </div>

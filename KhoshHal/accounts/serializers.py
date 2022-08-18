@@ -1,9 +1,7 @@
 from rest_framework import serializers
-from .models import User, Patient, Counselor, File, Appointment, Reservation
-from rest_framework.validators import UniqueValidator
+from .models import User, Patient, Counselor, Appointment
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
-import logging
 
 person = get_user_model()
 
@@ -27,45 +25,40 @@ class UserSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            last_name=validated_data['last_name'],
         )
 
-        try:
-            validated_data['file'] = File(
-                **validated_data['file'],
-            )
-            user.user_type = 2
-            user.set_password(validated_data['password'])
-            user.save()
-            counselor = Counselor.objects.create(user=user, medical_information=validated_data['file'])
-            counselor.save()
-            # validated_data['email'].send_activation_email()
-            # validated_data['email'].save()
-        except KeyError:
-            user.user_type = 1
-            user.set_password(validated_data['password'])
-            user.save()
-            patient = Patient.objects.create(user=user)
-            patient.save()
-            # validated_data['email'].send_activation_email()
-            # validated_data['email'].save()
+        user.set_password(validated_data['password'])
 
         return user
 
 
-class EditFileSerializer(serializers.ModelSerializer):
-    upload = serializers.SerializerMethodField()
+class CounselorSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        model = Counselor
+        fields = ("user", "medical_information")
 
+    def create(self, validated_data):
+        user = validated_data['user']
+        user.user_type = 2
+        user.save()
+        counselor = Counselor.objects.create(user=user, medical_information=validated_data['medical_information'])
+        counselor.save()
+        return user
+
+
+class PatientSerializer(UserSerializer):
     class Meta:
-        model = get_user_model()
-        fields = [
-            'file',
-        ]
+        model = User
+        fields = "user"
 
-    def update(self, instance, validated_data):
-        upload = instance.upload
-        upload.save()
-        return instance
+    def create(self, validated_data):
+        user = validated_data['user']
+        user.user_type = 1
+        user.save()
+        patient = Patient.objects.create(user=user)
+        patient.save()
+        return user
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -82,5 +75,3 @@ class AppointmentSerializer(serializers.ModelSerializer):
         )
 
         return attrs
-
-

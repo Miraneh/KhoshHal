@@ -18,6 +18,9 @@
                 />
               </div>
               <div id="login-form" class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                {% if request.method == 'POST' and error%}
+                <label class="form-label my-3 text-danger">{{ error }}</label>
+                {% endif %}
                 <form method="post">
                   {% csrf_token %}
                   <!-- Username input -->
@@ -27,7 +30,7 @@
                     >
                     <input
                       class="form-control"
-                      placeholder="Enter a valid email address"
+                      placeholder="Enter username"
                       name="username"
                     />
                   </div>
