@@ -50,7 +50,15 @@ class LogInView(APIView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return render(request, "registration/profile.html")
+            if user.user_type == 1:
+                return render(request, "registration/profile.html")
+            elif user.user_type == 2:
+                return render(request, "registration/profile.html",
+                              {"username": user.username,
+                               "first_name": user.first_name,
+                               "last_name": user.last_name,
+                               "email": user.email,
+                               "phone": user.phone})
         else:
             return render(request, "registration/login.html",
                           {"error": "Username or Password isn't correct"})
