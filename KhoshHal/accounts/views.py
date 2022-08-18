@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render
 from django.http import HttpResponse
 
+
 class SignUpView(APIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
@@ -73,6 +74,7 @@ class ProfileView(APIView):
         print("hey hey")
         return render(request, "registration/profile.html")
 
+
 # class EditFileView(generics.UpdateAPIView):
 #     serializer_class = serializers.EditFileSerializer
 #     permission_classes = (IsCounselor,)
@@ -81,10 +83,10 @@ class ProfileView(APIView):
 #         return self.request.user
 #
 
-# class CounselorListView(generics.ListAPIView):
-#     serializer_class = UserSerializer
-#     queryset = Counselor.objects.all()
-#     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-#     search_fields = ['user__username', 'user__first_name', 'user__last_name', 'specialty']
-#     ordering_fields = ['rating', 'specialty']
-#     ordering = ['user__last_name']
+class CounselorListView(generics.ListAPIView):
+    serializer_class = CounselorSerializer
+    queryset = Counselor.objects.all()
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'specialty']
+    ordering_fields = ['rating', 'specialty']
+    ordering = ['user__last_name']
