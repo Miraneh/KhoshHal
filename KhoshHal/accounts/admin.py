@@ -24,7 +24,7 @@ class CounselorAdmin(admin.ModelAdmin):
 
 
 @admin.register(Patient)
-class CounselorAdmin(admin.ModelAdmin):
+class PatientAdmin(admin.ModelAdmin):
     list_display = ["get_first_name", "get_last_name", "get_email"]
 
     def get_first_name(self, obj):

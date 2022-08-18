@@ -1,12 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.utils import timezone
-from utils import random64
 
 
 class File(models.Model):
