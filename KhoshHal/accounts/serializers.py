@@ -47,16 +47,16 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
             counselor = Counselor.objects.create(user=user)
             counselor.save()
-            email.send_activation_email()
-            email.save()
+            # validated_data['email'].send_activation_email()
+            # validated_data['email'].save()
         except KeyError:
             user.user_type = 1
             user.set_password(validated_data['password'])
             user.save()
             patient = Patient.objects.create(user=user)
             patient.save()
-            email.send_activation_email()
-            email.save()
+            # validated_data['email'].send_activation_email()
+            # validated_data['email'].save()
 
         return user
 

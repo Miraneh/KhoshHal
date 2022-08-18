@@ -22,8 +22,9 @@ class SignUpView(APIView):
 
     def post(self, request):
         serializer = UserSerializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        if len(serializer.errors) > 0:
+        try:
+            serializer.is_valid(raise_exception=True)
+        except:
             first_error = list(serializer.errors)[0]
             return render(request, 'registration/signup.html',
                           {'field': first_error, 'error': serializer.errors[first_error][0]})
