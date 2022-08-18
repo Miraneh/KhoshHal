@@ -1,16 +1,13 @@
 # Create your views here.
+from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework import generics, filters
 from .models import User, Patient, Counselor
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render
-from . import serializers
-from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-
 
 class SignUpView(APIView):
     queryset = User.objects.all()
