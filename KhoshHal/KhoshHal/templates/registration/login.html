@@ -21,16 +21,15 @@
                 <div id="login-form" class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                   <form method="post">
                     {% csrf_token %}
-                    <!-- Email input -->
+                    <!-- Username input -->
                     <div class="form-outline mb-4">
                       <label class="form-label"
-                      >Email address</label
+                      >Username</label
                       >
                       <input
-                        type="email"
                         class="form-control"
                         placeholder="Enter a valid email address"
-                        name="email"
+                        name="username"
                       />
                     </div>
                     <!-- Password input -->
