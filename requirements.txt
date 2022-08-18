@@ -9,3 +9,4 @@ django-extensions==3.1.5
 pytz==2021.3
 utils~=1.0.1
 Django-Verify-Email
+django-filter

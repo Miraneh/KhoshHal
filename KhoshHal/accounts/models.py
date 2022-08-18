@@ -25,9 +25,6 @@ class User(AbstractUser):
     address = models.TextField(blank=True, null=True)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, blank=True, null=True)
- 
-    # def __str__(self):
-    #     return self.email
 
 
 class Counselor(models.Model):
