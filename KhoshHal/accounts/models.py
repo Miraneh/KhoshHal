@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 class User(AbstractUser):
@@ -20,10 +21,10 @@ class User(AbstractUser):
     address = models.TextField(blank=True, null=True)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, blank=True, null=True)
-    username = models.CharField(max_length=15, blank=True, null=True, unique=True)
 
 
 class Counselor(models.Model):
+    objects = models.Manager()
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     specialty = models.CharField(max_length=128)
     ME_number = models.PositiveIntegerField()
@@ -31,10 +32,8 @@ class Counselor(models.Model):
 
 
 class Patient(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-
-    def __str__(self):
-        return self.user.email
+    objects = models.Manager()
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, primary_key=True)
 
 
 class MedicalInformation(models.Model):

@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import User, Patient, Counselor, MedicalInformation
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from django.db import models
 from django.contrib.auth import get_user_model
 
 person = get_user_model()
@@ -20,11 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email", "phone", "password", "repeat")
-        # extra_kwargs = {
-        #     'first_name': {'required': True},
-        #     'last_name': {'required': True}
-        # }
+        fields = ("username", "first_name", "last_name", "email", "phone", "password", "repeat")
 
     def validate(self, attrs):
         if attrs['password'] != attrs['repeat']:
@@ -34,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create(
+            username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name']
@@ -42,24 +38,18 @@ class UserSerializer(serializers.ModelSerializer):
         try:
             file = validated_data["file"]
             user.user_type = 2
-
+            user.set_password(validated_data['password'])
+            user.save()
+            counselor = Counselor.objects.create(user=user)
+            counselor.save()
         except:
             user.user_type = 1
+            user.set_password(validated_data['password'])
+            user.save()
+            patient = Patient.objects.create(user=user)
+            patient.save()
 
-        user.set_password(validated_data['password'])
-        user.save()
         return user
-
-
-class PatientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Patient
-
-
-class CounselorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Counselor
-        fields = ("specialty", "ME_number")
 
 
 class EditMedicalInfoSerializer(serializers.ModelSerializer):

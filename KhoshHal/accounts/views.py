@@ -1,11 +1,9 @@
 # Create your views here.
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from rest_framework import status
 from .models import User, Patient, Counselor
 from django.contrib.auth import authenticate, login
-from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
+from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render, redirect
 from rest_framework.authtoken.models import Token
@@ -23,14 +21,12 @@ class SignUpView(APIView):
 
     def post(self, request):
         serializer = UserSerializer(data=request.data, context={'request': request})
-        try:
-            serializer.is_valid(raise_exception=True)
-        except:
+        serializer.is_valid(raise_exception=True)
+        if len(serializer.errors) > 0:
             first_error = list(serializer.errors)[0]
             return render(request, 'registration/signup.html',
                           {'field': first_error, 'error': serializer.errors[first_error][0]})
         serializer.create(validated_data=serializer.validated_data)
-        # token, created = Token.objects.get_or_create(user=user)
         return render(request, 'registration/signup.html')
 
 
