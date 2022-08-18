@@ -52,8 +52,8 @@ class ProfileView(APIView):
         return render(request, "registration/profile.html")
 
 
-class EditMedicalInformationView(generics.UpdateAPIView):
-    serializer_class = serializers.EditMedicalInfoSerializer
+class EditFileView(generics.UpdateAPIView):
+    serializer_class = serializers.EditFileSerializer
     permission_classes = (IsCounselor,)
 
     def get_object(self):

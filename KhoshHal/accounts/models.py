@@ -14,7 +14,11 @@ class User(AbstractUser):
         (3, 'Admin'),
     )
 
-    email = models.EmailField(unique=True)
+    email = models.OneToOneField(
+        Email,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     national_ID = models.PositiveIntegerField(blank=True, null=True)
     phone = models.CharField(max_length=15)
     age = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -28,6 +32,7 @@ class Counselor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     specialty = models.CharField(max_length=128)
     ME_number = models.PositiveIntegerField()
+    medial_information = models.FileField()
     verified = models.BooleanField(default=False)
 
 
@@ -36,5 +41,5 @@ class Patient(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, primary_key=True)
 
 
-class MedicalInformation(models.Model):
+class File(models.Model):
     upload = models.FileField(upload_to='counselor_information_uploads/')

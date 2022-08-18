@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Patient, Counselor, MedicalInformation
+from .models import User, Patient, Counselor, File
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
@@ -24,6 +24,9 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['repeat']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
+        attrs['email'] = Email(
+            **attrs['email'],
+        )
 
         return attrs
 
@@ -36,13 +39,15 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
         try:
-            file = validated_data["file"]
+            validated_data['file'] = File(
+                **validated_data['file'],
+            )
             user.user_type = 2
             user.set_password(validated_data['password'])
             user.save()
             counselor = Counselor.objects.create(user=user)
             counselor.save()
-        except:
+        except KeyError:
             user.user_type = 1
             user.set_password(validated_data['password'])
             user.save()
@@ -52,13 +57,13 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class EditMedicalInfoSerializer(serializers.ModelSerializer):
+class EditFileSerializer(serializers.ModelSerializer):
     upload = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
         fields = [
-            'emails',
+            'file',
         ]
 
     def update(self, instance, validated_data):
