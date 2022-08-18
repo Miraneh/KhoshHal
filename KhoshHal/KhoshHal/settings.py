@@ -151,14 +151,24 @@ EMAIL_HOST_USER = 'user@server.com'
 EMAIL_HOST_PASSWORD = 'passsword'
 EMAIL_PORT = 587
 
-KAVENEGAR_ENABLED = False
-KAVENEGAR_SECRET_KEY = 'KAVENEGAR_SECRET_KEY'
 
-VERIFY_PHONE_COOLDOWN = timedelta(seconds=120)
-PHONE_VERIFICATION_ENABLED = True
-PHONE_VERIFICATION_EXPIRE_TIME = timedelta(seconds=120)
-PHONE_VERIFICATION_TOKEN_MIN_VALUE = 1000000
-PHONE_VERIFICATION_TOKEN_MAX_VALUE = 9999999
-PHONE_VERIFICATION_SMS_FORMAT = '''Welcome to KhoshHal!
-
-code: {code}'''
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+            },
+    },
+}
