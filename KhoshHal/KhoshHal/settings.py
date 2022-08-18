@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    # 'phonenumber_field',
+    'django_filters',
     'accounts',
 ]
 
@@ -171,4 +171,8 @@ LOGGING = {
             'propagate': False,
             },
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }

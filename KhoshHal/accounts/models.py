@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class File(models.Model):
     upload = models.FileField(upload_to='counselor_information_uploads/')
@@ -34,6 +34,7 @@ class Counselor(models.Model):
     ME_number = models.PositiveIntegerField()
     medial_information = models.OneToOneField(File, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
+    rating = models.DecimalField(max_digits=2, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(5)])
 
 
 class Patient(models.Model):

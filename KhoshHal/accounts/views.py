@@ -1,6 +1,6 @@
 # Create your views here.
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework import generics, filters
 from .models import User, Patient, Counselor
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
@@ -9,7 +9,6 @@ from django.shortcuts import render
 from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 
 
 class SignUpView(APIView):
@@ -74,3 +73,11 @@ class EditFileView(generics.UpdateAPIView):
     def get_object(self):
         return self.request.user
 
+
+class CounselorListView(generics.ListAPIView):
+    serializer_class = UserSerializer
+    queryset = Counselor.objects.all()
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'specialty']
+    ordering_fields = ['rating', 'specialty']
+    ordering = ['user__last_name']
