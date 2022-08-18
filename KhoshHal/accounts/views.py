@@ -6,9 +6,9 @@ from django.contrib.auth import authenticate, login
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render, redirect
-from rest_framework.authtoken.models import Token
 from . import serializers
 from .permissions import IsPatient, IsCounselor
+from django.http import HttpResponse
 
 
 class SignUpView(APIView):
@@ -35,14 +35,15 @@ class LogInView(APIView):  # TODO
     def get(self, request):
         return render(request, "registration/login.html")
 
-    def post(self, request, *args, **kwargs):
-        print(request.data)
-        return render(request, "registration/login.html")
-        # serializer = LoginSerializer(data=request.data, context={'request': request})
-        # serializer.is_valid(raise_exception=True)
-        # user = serializer.validated_data['user']
-        # token, created = Token.objects.get_or_create(user=user)
-        # return Response({"status": status.HTTP_200_OK, "Token": token.key})
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponse("Welcome")
+        else:
+            return HttpResponse("Wrong info")
 
 
 class ProfileView(APIView):
