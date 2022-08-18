@@ -5,10 +5,12 @@ from .models import User, Patient, Counselor, Email
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from ..KhoshHal import settings
 
 
 class SignUpView(APIView):
@@ -46,6 +48,7 @@ class LogInView(APIView):
             return HttpResponse("Wrong info")  # TODO
 
 
+@login_required(login_url="registration/login.html")
 class LogoutView(APIView):
 
     def get(self, request):
