@@ -10,6 +10,10 @@ from django.utils import timezone
 from utils import random64
 
 
+class File(models.Model):
+    upload = models.FileField(upload_to='counselor_information_uploads/')
+
+
 class Email(models.Model):
     address = models.EmailField()
     verified = models.BooleanField(
@@ -108,17 +112,13 @@ class Counselor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     specialty = models.CharField(max_length=128)
     ME_number = models.PositiveIntegerField()
-    medial_information = models.FileField(blank=True, null=True)
+    medial_information = models.OneToOneField(File, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
 
 
 class Patient(models.Model):
     objects = models.Manager()
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, primary_key=True)
-
-
-class File(models.Model):
-    upload = models.FileField(upload_to='counselor_information_uploads/')
 
 
 class Appointment(models.Model):

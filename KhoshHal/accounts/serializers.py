@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
             user.user_type = 2
             user.set_password(validated_data['password'])
             user.save()
-            counselor = Counselor.objects.create(user=user)
+            counselor = Counselor.objects.create(user=user, medical_information=validated_data['file'])
             counselor.save()
             email.send_activation_email()
             email.save()
