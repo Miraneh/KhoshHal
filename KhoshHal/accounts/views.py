@@ -1,7 +1,7 @@
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework import generics
-from .models import User, Patient, Counselor, Email
+from .models import User, Patient, Counselor
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
