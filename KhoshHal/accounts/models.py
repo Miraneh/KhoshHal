@@ -34,7 +34,7 @@ class Counselor(models.Model):
     ME_number = models.PositiveIntegerField(blank=True, null=True)
     medical_information = models.FileField(blank=True, null=True)
     verified = models.BooleanField(default=False)
-    rating = models.DecimalField(max_digits=2, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    rating = models.DecimalField(max_digits=2, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(5)], blank=True, null=True)
 
 
 class Patient(models.Model):
