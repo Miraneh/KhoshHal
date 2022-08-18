@@ -8,18 +8,12 @@ person = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     repeat = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "email", "phone", "password", "repeat")
+        fields = ("username", "first_name", "last_name", "email", "password", "repeat")
 
     def validate(self, attrs):
         if attrs['password'] != attrs['repeat']:
@@ -71,5 +65,9 @@ class EditFileSerializer(serializers.ModelSerializer):
         upload.save()
         return instance
 
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    repeat = serializers.CharField(write_only=True, required=True)
 
 
