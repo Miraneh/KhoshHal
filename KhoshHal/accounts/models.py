@@ -131,6 +131,6 @@ class Appointment(models.Model):
 
 class Reservation(models.Model):
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, primary_key=True)
-    patient = models.OneToOneField(Patient)
+    patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
 
 

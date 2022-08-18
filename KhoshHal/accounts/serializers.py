@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Patient, Counselor, File
+from .models import User, Patient, Counselor, File, Appointment, Reservation
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
@@ -67,7 +67,16 @@ class EditFileSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    repeat = serializers.CharField(write_only=True, required=True)
+    date = serializers.DateTimeField(required=True)
+    time = serializers.TimeField(required=True)
 
+    class Meta:
+        model = Appointment
+        fields = ("counselor", "date", "time")
 
+    def validate(self, attrs):
+        attrs['Counselor'] = Email(
+            **attrs['email'],
+        )
+
+        return attrs
