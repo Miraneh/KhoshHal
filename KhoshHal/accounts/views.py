@@ -73,18 +73,3 @@ class EditFileView(generics.UpdateAPIView):
     def get_object(self):
         return self.request.user
 
-
-class VerifyEmailView(generics.UpdateAPIView):
-    queryset = Email.objects.filter(verified=False)
-    serializer_class = serializers.VerifyEmailSerializer
-    permission_classes = (AllowAny,)
-    lookup_field = 'token'
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        expire_time = settings.ACTIVATION_EMAIL_EXPIRE_TIME
-        qs = qs.filter(last_sent__gt=timezone.now() - expire_time)
-        return qs
