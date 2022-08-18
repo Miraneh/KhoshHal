@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework import generics
 from .models import User, Patient, Counselor, Email
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render, redirect
@@ -30,7 +30,7 @@ class SignUpView(APIView):
         return render(request, 'registration/signup.html')
 
 
-class LogInView(APIView):  # TODO
+class LogInView(APIView):
 
     def get(self, request):
         return render(request, "registration/login.html")
@@ -41,9 +41,19 @@ class LogInView(APIView):  # TODO
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponse("Welcome")
+            return render(request, "registration/profile.html")
         else:
-            return HttpResponse("Wrong info")
+            return HttpResponse("Wrong info")  # TODO
+
+
+class LogoutView(APIView):
+
+    def get(self, request):
+        return render(request, "registration/login.html")  # TODO
+
+    def post(self, request):
+        logout(request)
+        return render(request, "index.html")
 
 
 class ProfileView(APIView):
