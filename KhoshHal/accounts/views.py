@@ -2,13 +2,14 @@
 from rest_framework.views import APIView
 from rest_framework import generics
 from .models import User, Patient, Counselor, Email
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 
 class SignUpView(APIView):
@@ -21,8 +22,9 @@ class SignUpView(APIView):
 
     def post(self, request):
         serializer = UserSerializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        if len(serializer.errors) > 0:
+        try:
+            serializer.is_valid(raise_exception=True)
+        except:
             first_error = list(serializer.errors)[0]
             return render(request, 'registration/signup.html',
                           {'field': first_error, 'error': serializer.errors[first_error][0]})
@@ -30,7 +32,7 @@ class SignUpView(APIView):
         return render(request, 'registration/signup.html')
 
 
-class LogInView(APIView):  # TODO
+class LogInView(APIView):
 
     def get(self, request):
         return render(request, "registration/login.html")
@@ -41,9 +43,20 @@ class LogInView(APIView):  # TODO
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponse("Welcome")
+            return render(request, "registration/profile.html")
         else:
-            return HttpResponse("Wrong info")
+            return HttpResponse("Wrong info")  # TODO
+
+
+# @login_required()
+class LogoutView(APIView):
+
+    def get(self, request):
+        return render(request, "registration/login.html")  # TODO
+
+    def post(self, request):
+        logout(request)
+        return render(request, "index.html")
 
 
 class ProfileView(APIView):

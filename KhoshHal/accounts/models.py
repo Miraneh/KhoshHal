@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils import timezone
-
 from utils import random64
 
 
@@ -95,7 +94,7 @@ class User(AbstractUser):
     )
 
     email = models.OneToOneField(
-        Email,
+            Email,
         null=True,
         on_delete=models.SET_NULL,
     )
@@ -105,6 +104,9 @@ class User(AbstractUser):
     address = models.TextField(blank=True, null=True)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, blank=True, null=True)
+ 
+    # def __str__(self):
+    #     return self.email
 
 
 class Counselor(models.Model):
