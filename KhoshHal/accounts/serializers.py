@@ -11,7 +11,7 @@ person = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     repeat = serializers.CharField(write_only=True, required=True)
-    email = serializers.EmailField(source='email.address')
+    email = serializers.EmailField(required=True)
 
     class Meta:
         model = User
@@ -20,14 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['repeat']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
-        try:
-            attrs['email'] = Email(
-                **attrs['email'],
-            )
-            attrs['email'].save()
-        except Exception as e:
-            print(e)
-
         return attrs
 
     def create(self, validated_data):
@@ -92,14 +84,3 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class VerifyEmailSerializer(serializers.ModelSerializer):
-    address = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Email
-        fields = ['address']
-
-    def update(self, instance, validated_data):
-        instance.verified = True
-        instance.save()
-        return instance
