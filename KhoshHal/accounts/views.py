@@ -18,6 +18,7 @@ from django.shortcuts import render
 from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
+from django.shortcuts import redirect
 
 
 class SignUpView(APIView):
@@ -63,12 +64,7 @@ class LogInView(APIView):
             if user.user_type == 1:
                 return render(request, "registration/profile.html")
             elif user.user_type == 2:
-                return render(request, "registration/profile.html",
-                              {"username": user.username,
-                               "first_name": user.first_name,
-                               "last_name": user.last_name,
-                               "email": user.email,
-                               "phone": user.phone})
+                return redirect("profile/counselor")
         else:
             return render(request, "registration/login.html",
                           {"error": "Username or Password isn't correct"})
@@ -86,11 +82,29 @@ class LogoutView(APIView):
         return render(request, "index.html")
 
 
-class ProfileView(APIView):
+class CounselorProfileview(APIView):
 
     def get(self, request):
-        print("hey hey")
-        return render(request, "registration/profile.html")
+        print(request.user.user_type)
+        print(request.user.phone)
+        counselor = Counselor.objects.filter(user=request.user)[0]
+        print(counselor.verified)
+    
+        return render(request, "registration/profile.html"
+                      , context={"username": counselor.user.username,
+                                 "first_name": counselor.user.first_name,
+                                 "last_name": counselor.user.last_name,
+                                 "email": counselor.user.email,
+                                 "verified": counselor.verified,
+                                 "specialty": counselor.specialty,
+                                 })
+
+    def post(self, request):
+        print("hello???")
+        print(request.user)
+        print(type(request.data['datetime']))
+        
+        # print(request.data.datetime)
 
 
 class AddAppointment(APIView):
