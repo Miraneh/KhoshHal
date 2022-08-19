@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% load static %}
+{% block title %}Doctors{%endblock%}
+{% block content %}
+<div class="container padding_bottom">
+    <div class="card-deck">
+        <section class="contact-section section_padding">
+        {% for doctor in doctors %}
+            {% if forloop.first %}<div class="row my-3">{% endif %}
+            <div class="col-xs-4">
+                <div class="card border-primary" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ doctor.user.first_name }} {{ doctor.user.last_name }}</h5>
+                        {% if doctor.verified %}
+                            <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialty }}</h6>
+                        {% else %}
+                            <h6 class="card-subtitle mb-2 text-danger">Not Verified</h6>
+                        {% endif %}
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+<!--                        <a href="#" class="my-3 card-link">Card link</a>-->
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+            {% if forloop.last %}</div>{% endif %}
+        {% endfor %}
+        </section>
+        <div class="col d-flex justify-content-center">
+            <div class="col-md-2 padding_top align-items-center">
+<!--                <form method="get">-->
+<!--                    {{ filter.form.rating }}-->
+<!--                    <button type="submit">Search</button>-->
+<!--                </form>-->
+            </div>  
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -142,6 +142,15 @@ class CounselorListView(generics.ListAPIView):
     ordering_fields = ['rating', 'specialty']
     ordering = ['user__last_name']
 
+    def get(self, request):
+        doctors = Counselor.objects.all()
+        return render(request,"doctors.html", context={'doctors': list(doctors)})
+        # print("get??")
+        # pass
+
+    def post(self, request):
+        pass
+
 
 class AddCommentView(APIView):
     permission_classes = (IsPatient,)
