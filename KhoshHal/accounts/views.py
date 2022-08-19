@@ -1,8 +1,8 @@
 # Create your views here.
-from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer
+from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer, CommentSerializer
 from rest_framework.views import APIView
 from rest_framework import generics, filters
-from .models import User, Patient, Counselor
+from .models import User, Patient, Counselor, Comment, Reservation
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -18,6 +18,8 @@ from django.shortcuts import render
 from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
+from django.db.models import Q
+
 
 
 class SignUpView(APIView):
@@ -101,14 +103,6 @@ class AddAppointment(APIView):
         return render(request, 'registration/profile.html')
 
 
-# class EditFileView(generics.UpdateAPIView):
-#     serializer_class = serializers.EditFileSerializer
-#     permission_classes = (IsCounselor,)
-# 
-#     def get_object(self):
-#         return self.request.user
-#
-
 class CounselorListView(generics.ListAPIView):
     serializer_class = CounselorSerializer
     queryset = Counselor.objects.all()
@@ -116,3 +110,25 @@ class CounselorListView(generics.ListAPIView):
     search_fields = ['user__username', 'user__first_name', 'user__last_name', 'specialty']
     ordering_fields = ['rating', 'specialty']
     ordering = ['user__last_name']
+
+
+class AddCommentView(APIView):
+    permission_classes = (IsPatient,)
+
+    def post(self, request, username):
+        crit1 = Q(appointment__counselor__username=username)
+        crit2 = Q(patient__username=username)
+        queryset = Reservation.objects.filter(crit1 & crit2)
+        if queryset:
+            serializer = CommentSerializer(data=request.data, context={'request': request})
+            try:
+                serializer.is_valid(raise_exception=True)
+            except:
+                first_error = list(serializer.errors)[0]
+                return render(request, "registration/profile.html",
+                              {'field': first_error, 'error': serializer.errors[first_error][0]})
+            comment = serializer.create(validated_data=serializer.validated_data)
+        else:
+            return render(request, "registration/profile.html",
+                          {'field': "Comment error", 'error': "You have never had an appointment with this counselor."})
+        return render(request, 'registration/profile.html')

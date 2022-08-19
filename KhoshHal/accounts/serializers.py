@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Patient, Counselor, Appointment
+from .models import User, Patient, Counselor, Appointment, Comment
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
 import logging
@@ -71,7 +71,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = ("counselor", "date", "time", "price")
 
-    def validate(self, validated_data):
+    def create(self, validated_data):
         counselor = validated_data['counselor']
         date = validated_data['date']
         time = validated_data['time']
@@ -80,3 +80,20 @@ class AppointmentSerializer(serializers.ModelSerializer):
         appointment.save()
 
         return appointment
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    text = serializers.CharField(required=True)
+
+    class Meta:
+        model = Comment
+        fields = ("writer", "counselor", "text")
+
+    def create(self, validated_data):
+        writer = validated_data['writer']
+        counselor = validated_data['counselor']
+        text = validated_data['text']
+        comment = Comment.objects.create(writer=writer, counselor=counselor, text=text)
+
+        return comment
+
