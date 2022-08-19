@@ -1,8 +1,9 @@
 # Create your views here.
-from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer
+from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer, \
+    CommentSerializer
 from rest_framework.views import APIView
 from rest_framework import generics, filters
-from .models import User, Patient, Counselor, Appointment
+from .models import User, Patient, Counselor, Appointment, Reservation
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -21,6 +22,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import redirect
 from datetime import datetime
+import re
 
 
 class SignUpView(APIView):
@@ -121,22 +123,6 @@ class PatientProfileview(APIView):
                                  })
 
 
-class AddAppointment(APIView):
-    permission_classes = (AllowAny,)
-
-    def post(self, request):
-        serializer = AppointmentSerializer(data=request.data, context={'request': request})
-        try:
-            serializer.is_valid(raise_exception=True)
-        except:
-            first_error = list(serializer.errors)[0]
-            return render(request, "registration/profile.html",
-                          {'field': first_error, 'error': serializer.errors[first_error][0]})
-
-        appointment = serializer.create(validated_data=serializer.validated_data)
-        return render(request, 'registration/profile.html')
-
-
 class CounselorListView(generics.ListAPIView):
     serializer_class = CounselorSerializer
     queryset = Counselor.objects.all()
@@ -160,6 +146,13 @@ class CounselorListView(generics.ListAPIView):
                                      "appointments": appointments,
                                      "is_user": False})
         else:
+            appointment = Appointment.objects.get(pk=int(re.search('Appointment object \((.*)\)',
+                                                                   request.data['appointment']).group(1)))
+            patient = Patient.objects.filter(user=request.user)[0]
+            if not appointment.reserved:
+                appointment.reserved = True
+                appointment.save()
+                reservation = Reservation.objects.create(appointment=appointment, patient=patient)
             return redirect('/accounts/profile/')
 
 
