@@ -63,7 +63,7 @@ class LogInView(APIView):
         if user is not None:
             login(request, user)
             if user.user_type == 1:
-                return render(request, "registration/profile.html")
+                return redirect("profile/patient")
             elif user.user_type == 2:
                 return redirect("profile/counselor")
         else:
@@ -77,12 +77,21 @@ class LogoutView(APIView):
         return render(request, "index.html")
 
 
+class Profileview(APIView):
+    def get(self, request):
+        print(request.user.user_type)
+        if request.user.user_type == 2:
+            return redirect('/accounts/login/profile/counselor/')
+        else:
+            return redirect('/accounts/login/profile/patient/')
+
+
 class CounselorProfileview(APIView):
 
     def get(self, request):
         counselor = Counselor.objects.filter(user=request.user)[0]
 
-        return render(request, "registration/profile.html"
+        return render(request, "registration/counselor_profile.html"
                       , context={"username": counselor.user.username,
                                  "first_name": counselor.user.first_name,
                                  "last_name": counselor.user.last_name,
@@ -94,8 +103,19 @@ class CounselorProfileview(APIView):
     def post(self, request):
         print("hello???")
         print(request.user)
-        print(type(request.data['datetime']))
+        print(request.data['datetime'])
+        return redirect('/accounts/login/profile/counselor/')
         # print(request.data.datetime)
+
+
+class PatientProfileview(APIView):
+    def get(self, request):
+        return render(request, "registration/patient_profile.html"
+                      , context={"username": request.user.username,
+                                 "first_name": request.user.first_name,
+                                 "last_name": request.user.last_name,
+                                 "email": request.user.email
+                                 })
 
 
 class AddAppointment(APIView):

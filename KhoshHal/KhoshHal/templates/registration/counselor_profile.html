@@ -20,12 +20,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mb-4 mb-lg-0">
-                    <div class="card-body p-0">
-                        <div class="panel-body">
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="card mb-4 mb-lg-0">-->
+<!--                    <div class="card-body p-0">-->
+<!--                        <div class="panel-body">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
             <div class="col-lg-8">
                 <div class="card mb-4">
@@ -62,8 +62,8 @@
                             </div>
                             {% endif %}
                         </div>
-                        <hr>
                         {% if verified %}
+                        <hr>
                         <div class="row">
                             <div class="col-sm-3">
                                 <p class="mb-0">Specialty</p>
@@ -75,6 +75,7 @@
                         {% endif %}
                     </div>
                 </div>
+                {% if verified %}
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card mb-4 mb-md-0">
@@ -101,7 +102,7 @@
                             </div>
                         </div>
                     </div>
-                <div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="card mb-4 mb-md-0">
                             <div class="card-body">
                                 <ul class="list-group-scroll">
@@ -113,16 +114,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
-    </div>
 </section>
-<script>
-    document.getElementById('button').onclick = function() {
-        alert("button was clicked");
-    };
-</script>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/popper.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>

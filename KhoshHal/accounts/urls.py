@@ -8,7 +8,9 @@ urlpatterns = [
     path("signup/", SignUpView.as_view(), name="signup"),
     path("login/", LogInView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
-    path("login/profile/counselor/", login_required(CounselorProfileview.as_view()), name="profile"),
+    path("profile/", login_required(Profileview.as_view()), name="profile"),
+    path("login/profile/counselor/", CounselorProfileview.as_view(), name="counselor_profile"),
+    path("login/profile/patient/", PatientProfileview.as_view(), name="patient_profile"),
     # path("medical-info/", EditFileView.as_view(), name="upload medical information"),
     # path("search/", FilterView.as_view(filterset_class=UserFilter, template_name='index.html'), name="search")
     # TODO make a section with search option
