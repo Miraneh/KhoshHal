@@ -2,7 +2,7 @@
 from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer
 from rest_framework.views import APIView
 from rest_framework import generics, filters
-from .models import User, Patient, Counselor
+from .models import User, Patient, Counselor, Appointment
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -20,6 +20,7 @@ from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import redirect
+from datetime import datetime
 
 
 class SignUpView(APIView):
@@ -101,10 +102,19 @@ class CounselorProfileview(APIView):
                                  })
 
     def post(self, request):
-        print("hello???")
-        print(request.user)
-        print(request.data['datetime'])
-        return redirect('/accounts/login/profile/counselor/')
+        counselor = Counselor.objects.filter(user=request.user)[0]
+        date = request.data['datetime'].split()[0]
+        time = request.data['datetime'].split()[1]
+        d = datetime(int(date.split('/')[2]), int(date.split('/')[1]), int(date.split('/')[0]), int(time.split(':')[0]),
+                     int(time.split(':')[1]))
+        print(d)
+        appointment = Appointment.objects.create(counselor=counselor, date=d)
+
+        return render(request, "registration/counselor_profile.html"
+                      , context={"date": appointment.date,
+                                 "price": appointment.price,
+                                 "reserved": appointment.reserved,
+                                 })
         # print(request.data.datetime)
 
 
@@ -144,7 +154,7 @@ class CounselorListView(generics.ListAPIView):
 
     def get(self, request):
         doctors = Counselor.objects.all()
-        return render(request,"doctors.html", context={'doctors': list(doctors)})
+        return render(request, "doctors.html", context={'doctors': list(doctors)})
         # print("get??")
         # pass
 

@@ -48,8 +48,7 @@ class Appointment(models.Model):
     objects = models.Manager()
     counselor = models.OneToOneField(Counselor, on_delete=models.CASCADE, primary_key=True)
     date = models.DateTimeField(blank=True, null=True)
-    time = models.TimeField(blank=True, null=True)
-    price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(default=50000)
     reserved = models.BooleanField(default=False)
 
 
