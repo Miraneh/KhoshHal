@@ -107,7 +107,7 @@ class CounselorProfileview(APIView):
         d = datetime(int(date.split('/')[2]), int(date.split('/')[0]), int(date.split('/')[1]),
                      int(time.split(':')[0]),
                      int(time.split(':')[1]))
-        # appointment = Appointment.objects.create(counselor=counselor, date=d)
+        appointment = Appointment.objects.create(counselor=counselor, date=d)
 
         return redirect("/accounts/login/profile/counselor/")
         # return redirect("/accounts/login/profile/counselor/")
