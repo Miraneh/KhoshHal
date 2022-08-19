@@ -72,13 +72,7 @@ class LogInView(APIView):
 
 
 class LogoutView(APIView):
-
     def get(self, request):
-        return render(request, "registration/login.html")  # TODO
-
-    def post(self, request):
-        if not request.user.is_authenticated:
-            return HttpResponse('Please login first')
         logout(request)
         return render(request, "index.html")
 
@@ -86,11 +80,8 @@ class LogoutView(APIView):
 class CounselorProfileview(APIView):
 
     def get(self, request):
-        print(request.user.user_type)
-        print(request.user.phone)
         counselor = Counselor.objects.filter(user=request.user)[0]
-        print(counselor.verified)
-    
+
         return render(request, "registration/profile.html"
                       , context={"username": counselor.user.username,
                                  "first_name": counselor.user.first_name,
@@ -104,7 +95,6 @@ class CounselorProfileview(APIView):
         print("hello???")
         print(request.user)
         print(type(request.data['datetime']))
-        
         # print(request.data.datetime)
 
 

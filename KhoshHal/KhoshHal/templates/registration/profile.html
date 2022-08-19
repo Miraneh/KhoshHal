@@ -14,8 +14,9 @@
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3">{{ username }}</h5>
                         <div class="d-flex justify-content-center mb-2">
-<!--                            <button type="button" class="btn btn-primary">Follow</button>-->
-<!--                            <button type="button" class="btn btn-outline-primary ms-1">Message</button>-->
+                            <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+
+                            <!--                            <button type="button" class="btn btn-outline-primary ms-1">Message</button>-->
                         </div>
                     </div>
                 </div>
@@ -117,6 +118,11 @@
     </div>
     </div>
 </section>
+<script>
+    document.getElementById('button').onclick = function() {
+        alert("button was clicked");
+    };
+</script>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/popper.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
