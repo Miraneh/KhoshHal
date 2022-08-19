@@ -1,5 +1,6 @@
 # Create your views here.
-from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer, CommentSerializer
+from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer, \
+    CommentSerializer
 from rest_framework.views import APIView
 from rest_framework import generics, filters
 from .models import User, Patient, Counselor, Comment, Reservation
@@ -19,7 +20,6 @@ from . import serializers
 from .permissions import IsPatient, IsCounselor
 from django.http import HttpResponse
 from django.db.models import Q
-
 
 
 class SignUpView(APIView):
