@@ -46,7 +46,7 @@ class Patient(models.Model):
 
 class Appointment(models.Model):
     objects = models.Manager()
-    counselor = models.OneToOneField(Counselor, on_delete=models.CASCADE)
+    counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE, primary_key=False)
     date = models.DateTimeField(blank=True, null=True)
     price = models.PositiveIntegerField(default=50000)
     reserved = models.BooleanField(default=False)
@@ -59,6 +59,6 @@ class Reservation(models.Model):
 
 
 class Comment(models.Model):
-    writer = models.OneToOneField(Patient, on_delete=models.CASCADE)
-    counselor = models.OneToOneField(Counselor, on_delete=models.CASCADE)
+    writer = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE)
     text = models.TextField(blank=True, null=False)
