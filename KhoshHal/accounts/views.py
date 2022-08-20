@@ -91,17 +91,11 @@ class CounselorProfileview(APIView):
 
     def get(self, request):
         counselor = Counselor.objects.filter(user=request.user)[0]
-        appointment = Appointment.objects.filter(counselor= counselor)
-
+        appointments = Appointment.objects.filter(counselor=counselor)
         return render(request, "registration/counselor_profile.html"
-                      , context={"username": counselor.user.username,
-                                 "first_name": counselor.user.first_name,
-                                 "last_name": counselor.user.last_name,
-                                 "email": counselor.user.email,
-                                 "verified": counselor.verified,
-                                 "specialty": counselor.specialty,
-                                 "appointments": appointment
-                                 })
+                      , context={"counselor": counselor,
+                                 "appointments": appointments,
+                                 "is_user": True})
 
     def post(self, request):
         counselor = Counselor.objects.filter(user=request.user)[0]
@@ -109,12 +103,14 @@ class CounselorProfileview(APIView):
         print(request.data)
         date = request.data['datetime'].split(" ")[0]
         time = request.data['datetime'].split(" ")[1]
-        format = request.data['datetime'].split(" ")[2] #am or pm
-        d = datetime(int(date.split('/')[2]), int(date.split('/')[0]), int(date.split('/')[1]), int(time.split(':')[0]),
+        format = request.data['datetime'].split(" ")[2]  # am or pm
+        d = datetime(int(date.split('/')[2]), int(date.split('/')[0]), int(date.split('/')[1]),
+                     int(time.split(':')[0]),
                      int(time.split(':')[1]))
         # appointment = Appointment.objects.create(counselor=counselor, date=d)
 
         return redirect("/accounts/login/profile/counselor/")
+        # return redirect("/accounts/login/profile/counselor/")
 
 
 class PatientProfileview(APIView):
@@ -154,11 +150,15 @@ class CounselorListView(generics.ListAPIView):
     def get(self, request):
         doctors = Counselor.objects.all()
         return render(request, "doctors.html", context={'doctors': list(doctors)})
-        # print("get??")
-        # pass
 
     def post(self, request):
-        pass
+        user = User.objects.filter(username=request.data['doctor'])[0]
+        counselor = Counselor.objects.filter(user=user)[0]
+        appointments = Appointment.objects.filter(counselor=counselor)
+        return render(request, "registration/counselor_profile.html"
+                      , context={"counselor": counselor,
+                                 "appointments": appointments,
+                                 "is_user": False})
 
 
 class AddCommentView(APIView):
