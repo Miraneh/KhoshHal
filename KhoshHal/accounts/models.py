@@ -55,7 +55,7 @@ class Appointment(models.Model):
 class Reservation(models.Model):
     objects = models.Manager()
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, primary_key=True)
-    patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, primary_key=False)
 
 
 class Comment(models.Model):
