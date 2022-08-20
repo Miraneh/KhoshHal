@@ -91,6 +91,7 @@ class CounselorProfileview(APIView):
 
     def get(self, request):
         counselor = Counselor.objects.filter(user=request.user)[0]
+        appointment = Appointment.objects.filter(counselor= counselor)
 
         return render(request, "registration/counselor_profile.html"
                       , context={"username": counselor.user.username,
@@ -99,22 +100,26 @@ class CounselorProfileview(APIView):
                                  "email": counselor.user.email,
                                  "verified": counselor.verified,
                                  "specialty": counselor.specialty,
+                                 "appointments": appointment
                                  })
 
     def post(self, request):
         counselor = Counselor.objects.filter(user=request.user)[0]
+        print(request)
         date = request.data['datetime'].split()[0]
         time = request.data['datetime'].split()[1]
         d = datetime(int(date.split('/')[2]), int(date.split('/')[1]), int(date.split('/')[0]), int(time.split(':')[0]),
                      int(time.split(':')[1]))
-        print(d)
+        # print(d)
         appointment = Appointment.objects.create(counselor=counselor, date=d)
 
-        return render(request, "registration/counselor_profile.html"
-                      , context={"date": appointment.date,
-                                 "price": appointment.price,
-                                 "reserved": appointment.reserved,
-                                 })
+        return redirect("/accounts/login/profile/counselor/")
+
+        # return render(request, "registration/counselor_profile.html"
+        #               , context={"date": appointment.date,
+        #                          "price": appointment.price,
+        #                          "reserved": appointment.reserved,
+        #                          })
         # print(request.data.datetime)
 
 

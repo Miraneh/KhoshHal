@@ -106,10 +106,21 @@
                         <div class="card mb-4 mb-md-0">
                             <div class="card-body">
                                 <ul class="list-group-scroll">
-                                    {% if request.method == 'POST' %}
+                                    {% for appointment in appointments %}
+                                    <li class="list-group-item">
+                                        {% if appointment.reserved %}
+                                        <strong class="text-success">
+                                        {% else %}
+                                        <strong class="text-danger">
+                                        {% endif %}
+                                            {{ appointment.date }} {{ appointment.time }}
+                                        </strong>
+                                    </li>
+                                    {% endfor %}
+<!--                                    {% if request.method == 'POST' %}-->
 <!--                                    <li class="list-group-item"><strong>Signature-->
 <!--                                    </li>-->
-                                    {% endif %}
+<!--                                    {% endif %}-->
                                 </ul>
                             </div>
                         </div>
