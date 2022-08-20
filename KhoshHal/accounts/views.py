@@ -101,14 +101,14 @@ class CounselorProfileview(APIView):
                                  "is_user": True})
 
     def post(self, request):
-        print(request.data)
         counselor = Counselor.objects.filter(user=request.user)[0]
         date = request.data['datetime'].split(" ")[0]
         time = request.data['datetime'].split(" ")[1]
         d = datetime(int(date.split('/')[2]), int(date.split('/')[0]), int(date.split('/')[1]),
                      int(time.split(':')[0]),
                      int(time.split(':')[1]))
-        appointment = Appointment.objects.create(counselor=counselor, date=d)
+        price = request.data['price']
+        appointment = Appointment.objects.create(counselor=counselor, date=d, price=price)
 
         return redirect("/accounts/login/profile/counselor/")
 
@@ -139,7 +139,6 @@ class CounselorListView(generics.ListAPIView):
         return render(request, "doctors.html", context={'doctors': doctors})
 
     def post(self, request):
-        print(request.data)
         if request.data['post'] == "view":
             user = User.objects.filter(username=request.data['doctor'])[0]
             counselor = Counselor.objects.filter(user=user)[0]
@@ -149,8 +148,7 @@ class CounselorListView(generics.ListAPIView):
                                      "appointments": appointments,
                                      "is_user": False})
         else:
-            appointment = Appointment.objects.get(pk=int(re.search('Appointment object \((.*)\)',
-                                                                   request.data['appointment']).group(1)))
+            appointment = Appointment.objects.get(pk=int(re.search('Appointment object \((.*)\)',                                                   request.data['appointment']).group(1)))
             patient = Patient.objects.filter(user=request.user)[0]
             if not appointment.reserved:
                 appointment.reserved = True
