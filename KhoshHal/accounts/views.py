@@ -105,22 +105,16 @@ class CounselorProfileview(APIView):
 
     def post(self, request):
         counselor = Counselor.objects.filter(user=request.user)[0]
-        print(request)
-        date = request.data['datetime'].split()[0]
-        time = request.data['datetime'].split()[1]
-        d = datetime(int(date.split('/')[2]), int(date.split('/')[1]), int(date.split('/')[0]), int(time.split(':')[0]),
+        print("hellllooooooo")
+        print(request.data)
+        date = request.data['datetime'].split(" ")[0]
+        time = request.data['datetime'].split(" ")[1]
+        format = request.data['datetime'].split(" ")[2] #am or pm
+        d = datetime(int(date.split('/')[2]), int(date.split('/')[0]), int(date.split('/')[1]), int(time.split(':')[0]),
                      int(time.split(':')[1]))
-        # print(d)
-        appointment = Appointment.objects.create(counselor=counselor, date=d)
+        # appointment = Appointment.objects.create(counselor=counselor, date=d)
 
         return redirect("/accounts/login/profile/counselor/")
-
-        # return render(request, "registration/counselor_profile.html"
-        #               , context={"date": appointment.date,
-        #                          "price": appointment.price,
-        #                          "reserved": appointment.reserved,
-        #                          })
-        # print(request.data.datetime)
 
 
 class PatientProfileview(APIView):
