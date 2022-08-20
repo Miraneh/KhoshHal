@@ -12,6 +12,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ doctor.user.first_name }} {{ doctor.user.last_name }}</h5>
                         <input type = "hidden" name = "doctor" value = "{{ doctor.user.username }}" />
+                        <input type = "hidden" name = "post" value = "view" />
                         {% if doctor.verified %}
                             <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialty }}</h6>
                             <button class="btn btn-primary" type="submit" id="reserve_1"> Reserve </button>

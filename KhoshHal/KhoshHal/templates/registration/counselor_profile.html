@@ -88,8 +88,7 @@
                                                 <div class="input-group date" id="id_0">
                                                     <label class="label-control form-label">Select the start of an hour-long session</label>
                                                     <div class="row form-outline mb-3">
-                                                        <input type = "hidden" name = "set_appointment" value = "True" />
-                                                        <input type="text" value="" class="form-control col-md-7" name="datetime" placeholder="MM/DD/YYYY hh:mm:ss" required/>
+                                                            <input type="text" value="" class="form-control col-md-7" name="datetime" placeholder="MM/DD/YYYY hh:mm:ss" required/>
                                                         <button
                                                                 type="submit"
                                                                 class="btn btn-primary mx-2 col-md-4"
@@ -119,7 +118,14 @@
                                             {{ appointment.date }}
                                         </strong>
                                         {% if not is_user %}
-                                        <button class="btn btn-secondary">reserve</button>
+                                            <form method="post" class="btn-group">
+                                                {% csrf_token %}
+                                                <input type = "hidden" name = "appointment" value = "{{ appointment }}" />
+                                                <input type = "hidden" name = "doctor" value = "{{ counselor.user.username }}" />
+                                                <input type="hidden" name="post" value="reserve" />
+
+                                                <button class="btn btn-secondary ml-3" type="submit">reserve</button>
+                                            </form>
                                         {% endif %}
                                     </li>
                                     {% endfor %}
