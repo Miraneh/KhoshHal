@@ -12,20 +12,12 @@
                     <div class="card-body text-center">
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px;">
-                        <h5 class="my-3">{{ username }}</h5>
+                        <h5 class="my-3">{{ patient.user.username }}</h5>
                         <div class="d-flex justify-content-center mb-2">
                             <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
-
-                            <!--                            <button type="button" class="btn btn-outline-primary ms-1">Message</button>-->
                         </div>
                     </div>
                 </div>
-<!--                <div class="card mb-4 mb-lg-0">-->
-<!--                    <div class="card-body p-0">-->
-<!--                        <div class="panel-body">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
             </div>
             <div class="col-lg-8">
                 <div class="card mb-4">
@@ -35,7 +27,7 @@
                                 <p class="mb-0">Full Name</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ first_name }} {{ last_name }}</p>
+                                <p class="text-muted mb-0">{{ patient.user.first_name }} {{ patient.user.last_name }}</p>
                             </div>
                         </div>
                         <hr>
@@ -44,11 +36,29 @@
                                 <p class="mb-0">Email</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ email }}</p>
+                                <p class="text-muted mb-0">{{ patient.user.email }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="card mb-4 mb-md-0">
+                        <div class="card-body">
+                            <ul class="list-group-scroll">
+                                {% for reserve in reservations %}
+                                <li class="list-group-item">
+                                    <label> <strong>
+                                        {{ reserve.appointment.counselor.user.first_name }} {{ reserve.appointment.counselor.user.last_name }}
+                                    </strong></label>
+                                    <hr>
+                                    <label> {{ reserve.appointment.date }} </label>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

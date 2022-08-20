@@ -96,6 +96,7 @@ class CounselorProfileview(APIView):
         appointments = Appointment.objects.filter(counselor=counselor)
         return render(request, "registration/counselor_profile.html"
                       , context={"counselor": counselor,
+                                 "user": request.user,
                                  "appointments": appointments,
                                  "is_user": True})
 
@@ -110,16 +111,18 @@ class CounselorProfileview(APIView):
         appointment = Appointment.objects.create(counselor=counselor, date=d)
 
         return redirect("/accounts/login/profile/counselor/")
-        # return redirect("/accounts/login/profile/counselor/")
 
 
 class PatientProfileview(APIView):
     def get(self, request):
+        patient = Patient.objects.filter(user=request.user)[0]
+        reservations = Reservation.objects.filter(patient=patient)
+        print(reservations)
         return render(request, "registration/patient_profile.html"
-                      , context={"username": request.user.username,
-                                 "first_name": request.user.first_name,
-                                 "last_name": request.user.last_name,
-                                 "email": request.user.email
+                      , context={"patient": patient,
+                                 "user": request.user,
+                                 "reservations": reservations,
+                                 "is_user": True
                                  })
 
 
