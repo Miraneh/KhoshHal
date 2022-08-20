@@ -115,16 +115,12 @@
                                         <strong class="text-success">
                                         {% else %}
                                             <strong class="text-danger">
-                                                {% if not is_user %}
-<!--                                                <form method="post">-->
-<!--                                                    {% csrf_token %}-->
-<!--                                                    <input type = "hidden" name = "rkakj" value = "something" />-->
-                                                    <button>reserve</button>
-<!--                                                </form>-->
-                                                {% endif %}
                                         {% endif %}
                                             {{ appointment.date }}
                                         </strong>
+                                        {% if not is_user %}
+                                        <button class="btn btn-secondary">reserve</button>
+                                        {% endif %}
                                     </li>
                                     {% endfor %}
 <!--                                    {% if request.method == 'POST' %}-->
