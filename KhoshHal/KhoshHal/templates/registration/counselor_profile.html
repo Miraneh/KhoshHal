@@ -124,13 +124,13 @@
                                                 {{ appointment.price }} Rials
                                             </label>
                                         {% if not is_user %}
-                                            <form method="post" class="btn-group">
+                                            <form method="post" class="d-flex justify-content-center">
                                                 {% csrf_token %}
                                                 <input type = "hidden" name = "appointment" value = "{{ appointment }}" />
                                                 <input type = "hidden" name = "doctor" value = "{{ counselor.user.username }}" />
                                                 <input type="hidden" name="post" value="reserve" />
                                                 {% if not appointment.reserved and user.user_type == 1 %}
-                                                <button class="btn btn-secondary ml-3" type="submit">reserve</button>
+                                                <button class="btn btn-secondary ml-3" type="submit">Reserve</button>
                                                 {% endif %}
                                             </form>
                                         {% endif %}

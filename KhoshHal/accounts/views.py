@@ -115,15 +115,21 @@ class CounselorProfileview(APIView):
 
 class PatientProfileview(APIView):
     def get(self, request):
-        patient = Patient.objects.filter(user=request.user)[0]
-        reservations = Reservation.objects.filter(patient=patient)
-        print(reservations)
-        return render(request, "registration/patient_profile.html"
+        try:
+            patient = Patient.objects.filter(user=request.user)[0]
+            reservations = Reservation.objects.filter(patient=patient)
+            return render(request, "registration/patient_profile.html"
                       , context={"patient": patient,
                                  "user": request.user,
                                  "reservations": reservations,
                                  "is_user": True
                                  })
+        except:
+            return redirect("/accounts/login/")
+        
+    def post(self, request):
+        print(request.data)
+        return redirect('/accounts/login/profile/patient/')
 
 
 class CounselorListView(generics.ListAPIView):
