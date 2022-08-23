@@ -62,3 +62,9 @@ class Comment(models.Model):
     writer = models.ForeignKey(Patient, on_delete=models.CASCADE)
     counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE)
     text = models.TextField(blank=True, null=False)
+
+
+class Message(models.Model):
+    patient = models.ForeignKey(Patient, on_delete= models.CASCADE)
+    counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE)
+    text = models.TextField(blank=True, null=False)
