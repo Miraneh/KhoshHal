@@ -119,16 +119,20 @@ class PatientProfileview(APIView):
             patient = Patient.objects.filter(user=request.user)[0]
             reservations = Reservation.objects.filter(patient=patient)
             return render(request, "registration/patient_profile.html"
-                      , context={"patient": patient,
-                                 "user": request.user,
-                                 "reservations": reservations,
-                                 "is_user": True
-                                 })
+                          , context={"patient": patient,
+                                     "user": request.user,
+                                     "reservations": reservations,
+                                     "is_user": True
+                                     })
         except:
             return redirect("/accounts/login/")
-        
+
     def post(self, request):
-        print(request.data)
+        appointment = Appointment.objects.get(pk=request.data["appointment"])
+        reservation = Reservation.objects.get(appointment=appointment)
+        reservation.delete()
+        appointment.reserved = False
+        appointment.save()
         return redirect('/accounts/login/profile/patient/')
 
 
@@ -154,7 +158,8 @@ class CounselorListView(generics.ListAPIView):
                                      "appointments": appointments,
                                      "is_user": False})
         else:
-            appointment = Appointment.objects.get(pk=int(re.search('Appointment object \((.*)\)',                                                   request.data['appointment']).group(1)))
+            appointment = Appointment.objects.get(
+                pk=int(re.search('Appointment object \((.*)\)', request.data['appointment']).group(1)))
             patient = Patient.objects.filter(user=request.user)[0]
             if not appointment.reserved:
                 appointment.reserved = True
