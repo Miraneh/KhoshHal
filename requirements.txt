@@ -8,4 +8,5 @@ phonenumbers==8.12.36
 django-extensions==3.1.5
 pytz==2021.3
 utils~=1.0.1
-django-filter
+django-filter~=22.1
+channels~=3.0.5

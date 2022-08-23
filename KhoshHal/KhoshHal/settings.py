@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'accounts',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -176,3 +177,5 @@ LOGGING = {
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
+
+ASGI_APPLICATION = "KhoshHal.asgi.application"
