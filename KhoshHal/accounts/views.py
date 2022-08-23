@@ -129,7 +129,7 @@ class PatientProfileview(APIView):
 
     def post(self, request):
         appointment = Appointment.objects.get(pk=request.data["appointment"])
-        reservation = Reservation.objects.get(appointment=appointment)
+        reservation = Reservation.objects.get(appointment=appointment)  # TODO return the money
         reservation.delete()
         appointment.reserved = False
         appointment.save()
