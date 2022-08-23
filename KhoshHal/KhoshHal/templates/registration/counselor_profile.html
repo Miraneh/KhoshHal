@@ -85,18 +85,20 @@
                                         <form action="" method="post" class="datepickers">
                                             {% csrf_token %}
                                             <div class="form-group">
-                                                <div class="input-group date" id="id_0">
+                                                <div class="date form-outline mb-3" id="id_0">
                                                     <label class="label-control form-label">Select the start of an hour-long session</label>
-                                                    <div class="row form-outline mb-3">
-                                                            <input type="text" value="" class="form-control col-md-7" name="datetime" placeholder="MM/DD/YYYY hh:mm:ss" required/>
-                                                        <button
-                                                                type="submit"
-                                                                class="btn btn-primary mx-2 col-md-4"
-                                                                style="padding-left: 1.5rem; padding-right: 1.5rem;"
-                                                        >Save
-                                                        </button>
-                                                    </div>
+                                                    <input type="text" value="" class="form-control col-md-7" name="datetime" placeholder="MM/DD/YYYY hh:mm:ss" required/>
                                                 </div>
+                                                <div class="form-outline mb-3">
+                                                    <label class="label-control form-label"> Price </label>
+                                                    <input type="number" class="form-control col-md-7" min="10000" step="1000" name="price" />
+                                                </div>
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-primary mx-2 col-md-4"
+                                                    style="padding-left: 1.5rem; padding-right: 1.5rem;"
+                                                >Save
+                                                </button>
                                             </div>
                                         </form>
                                 </div>
@@ -117,14 +119,19 @@
                                         {% endif %}
                                             {{ appointment.date }}
                                         </strong>
+                                        <hr>
+                                            <label>
+                                                {{ appointment.price }} Rials
+                                            </label>
                                         {% if not is_user %}
-                                            <form method="post" class="btn-group">
+                                            <form method="post" class="d-flex justify-content-center">
                                                 {% csrf_token %}
                                                 <input type = "hidden" name = "appointment" value = "{{ appointment }}" />
                                                 <input type = "hidden" name = "doctor" value = "{{ counselor.user.username }}" />
                                                 <input type="hidden" name="post" value="reserve" />
-
-                                                <button class="btn btn-secondary ml-3" type="submit">reserve</button>
+                                                {% if not appointment.reserved and user.user_type == 1 %}
+                                                <button class="btn btn-secondary ml-3" type="submit">Reserve</button>
+                                                {% endif %}
                                             </form>
                                         {% endif %}
                                     </li>
