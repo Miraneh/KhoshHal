@@ -54,17 +54,20 @@ class Appointment(models.Model):
 
 class Reservation(models.Model):
     objects = models.Manager()
-    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, primary_key=True)
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, primary_key=False)
+    authority = models.BigIntegerField(primary_key=True)
+    reference_id = models.IntegerField(blank=True, null=True)
 
 
 class Comment(models.Model):
+    objects = models.Manager()
     writer = models.ForeignKey(Patient, on_delete=models.CASCADE)
     counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE)
     text = models.TextField(blank=True, null=False)
 
 
 class Message(models.Model):
-    patient = models.ForeignKey(Patient, on_delete= models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE)
     text = models.TextField(blank=True, null=False)

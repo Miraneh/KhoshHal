@@ -4,5 +4,4 @@ app_name = 'chat'
 
 urlpatterns = [
     path('', app_index, name="index"),
-    path('<str:name>/', room_name, name='room'),
 ]

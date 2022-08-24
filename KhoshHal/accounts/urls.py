@@ -15,5 +15,5 @@ urlpatterns = [
     # path("search/", FilterView.as_view(filterset_class=UserFilter, template_name='index.html'), name="search")
     # TODO make a section with search option
     path("search/", login_required(CounselorListView.as_view()), name="search"),
-    # path(r"profile/(?P<username>\w+)/comment/.+", AddCommentView.as_view(), name="add_comment")
+    path("verify/", login_required(verify), name="verify")
 ]

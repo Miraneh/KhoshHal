@@ -1,27 +1,35 @@
 # Create your views here.
-from .serializers import UserSerializer, CounselorSerializer, PatientSerializer, AppointmentSerializer, \
-    CommentSerializer
-from rest_framework.views import APIView
-from rest_framework import generics, filters
+import json
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+
+from .serializers import UserSerializer, CounselorSerializer, PatientSerializer
 from .models import User, Patient, Counselor, Appointment, Reservation, Comment
-from django.contrib.auth import authenticate, login, logout
-from .serializers import UserSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.shortcuts import render
-from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework import generics, filters
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from django.shortcuts import render
-from . import serializers
-from .permissions import IsPatient, IsCounselor
-from django.http import HttpResponse
-from django.db.models import Q
 from django.shortcuts import redirect
 from datetime import datetime
 import re
+import requests
+from .zarinpal import Zarinpal, ZarinpalError
+
+MERCHANT = '11111111-2222-3333-4444-555555555555'
+WSDL = "https://sandbox.zarinpal.com/pg/services/WebGate/wsdl"
+WEB_GATE = "https://sandbox.zarinpal.com/pg/StartPay/"
+ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
+ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
+ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
+description = "Please pay for the meeting"  # Required
+CallbackURL = 'http://localhost:8000/verify/'
+
+zarin_pal = Zarinpal('XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
+                     'http://127.0.0.1:8000/accounts/verify',
+                     sandbox=True)
 
 
 class SignUpView(APIView):
@@ -138,8 +146,8 @@ class PatientProfileview(APIView):
 
 
 class CounselorListView(generics.ListAPIView):
-    queryset = Counselor.objects.all()
     serializer_class = CounselorSerializer
+    queryset = Counselor.objects.all()
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['user__username', 'user__first_name', 'user__last_name', 'specialty']
     ordering_fields = ['rating', 'specialty']
@@ -172,14 +180,62 @@ class CounselorListView(generics.ListAPIView):
                                      "is_user": False})
         elif request.data['post'] == "comment":
             if request.data['comment'] != "":
-                comment = Comment.objects.create(writer=patient[0], counselor=counselor,text=request.data['comment'])
+                comment = Comment.objects.create(writer=patient[0], counselor=counselor, text=request.data['comment'])
                 return redirect('/doctors/search/')
         else:
             appointment = Appointment.objects.get(
                 pk=int(re.search('Appointment object \((.*)\)', request.data['appointment']).group(1)))
             patient = Patient.objects.filter(user=request.user)[0]
             if not appointment.reserved:
-                appointment.reserved = True
-                appointment.save()
-                reservation = Reservation.objects.create(appointment=appointment, patient=patient)
+                try:
+                    amount = appointment.price
+                    redirect_url = zarin_pal.payment_request(amount, description)
+                    reservation = Reservation.objects.create(appointment=appointment, patient=patient,
+                                                             authority=zarin_pal.authority)
+                    return redirect(redirect_url)
+                except ZarinpalError as e:
+                    return HttpResponse(e)
             return redirect('/accounts/profile/')
+
+
+def verify(request):
+    if request.GET['Status'] == 'OK':
+        authority = int(request.GET['Authority'])
+        try:
+            # try to found transaction
+            try:
+                reservation = Reservation.objects.get(authority=authority)
+
+            # if we couldn't find the transaction
+            except ObjectDoesNotExist:
+                return HttpResponse('we can\'t find this reservation')
+
+            code, message, ref_id = zarin_pal.payment_verification(reservation.appointment.price, authority)
+
+            # everything is okey
+            if code == 100:
+                reservation.appointment.reserved = True
+                reservation.appointment.save()
+                reservation.reference_id = ref_id
+                reservation.save()
+                content = {
+                    'type': 'Success',
+                    'ref_id': ref_id
+                }
+                return render(request, "registration/patient_profile.html", context=content)
+            # operation was successful but PaymentVerification operation on this transaction have already been done
+            elif code == 101:
+                content = {
+                    'type': 'Warning'
+                }
+                return render(request, "registration/patient_profile.html", context=content)
+
+        # if got an error from zarinpal
+        except ZarinpalError as e:
+            return HttpResponse(e)
+    else:
+        authority = int(request.GET['Authority'])
+        reservation = Reservation.objects.get(authority=authority)
+        reservation.delete()
+
+    return render(request, "registration/patient_profile.html")
