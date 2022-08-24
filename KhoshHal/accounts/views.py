@@ -138,16 +138,16 @@ class PatientProfileview(APIView):
 
 
 class CounselorListView(generics.ListAPIView):
-    serializer_class = CounselorSerializer
     queryset = Counselor.objects.all()
+    serializer_class = CounselorSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['user__username', 'user__first_name', 'user__last_name', 'specialty']
     ordering_fields = ['rating', 'specialty']
     ordering = ['user__last_name']
 
     def get(self, request):
-        doctors = Counselor.objects.all()
-        return render(request, "doctors.html", context={'doctors': doctors})
+        # doctors = Counselor.objects.all()
+        return render(request, "doctors.html", context={'doctors': self.get_queryset()})
 
     def post(self, request):
         user = User.objects.filter(username=request.user.username)[0]
