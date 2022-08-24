@@ -54,29 +54,41 @@
         </div>
         <div class="col-md-6">
           <div class="card mb-4 mb-md-0">
-            <div class="card-body">
               <ul class="list-group-scroll">
                 {% for reserve in reservations %}
                 <li class="list-group-item">
-                  <label>
-                    <strong>
-                      {{reserve.appointment.counselor.user.first_name}}
-                      {{reserve.appointment.counselor.user.last_name}}
-                    </strong>
-                  </label>
-                  <hr />
                   <form method="post" class="d-flex justify-content-center">
-                    {% csrf_token %}
-                    <label> {{ reserve.appointment.date }} </label>
-                    <br />
-                    <input
-                      type="hidden"
-                      name="appointment"
-                      value="{{ reserve.appointment.id }}"
-                    />
-                    <button type="submit" class="btn btn-danger ml-3">
-                      Cancel
-                    </button>
+                    <div class="card-body">
+                    <div class="card-text">
+                      <label>
+                        <strong>
+                          {{reserve.appointment.counselor.user.first_name}}
+                          {{reserve.appointment.counselor.user.last_name}}
+                        </strong>
+                      </label>
+                      <hr />
+                      {% csrf_token %}
+                      <label> {{ reserve.appointment.date }} </label>
+                    </div>
+                    <div class="card-footer justify-content-center">
+                      <input
+                        type="hidden"
+                        name="appointment"
+                        value="{{ reserve.appointment.id }}"
+                      />
+                      <button type="submit" class="btn btn-danger">
+                        Cancel
+                      </button>
+                      <a
+                        href="{{ reserve.appointment.counselor.meeting_link }}"
+                      >
+                        <input
+                          class="btn btn-primary"
+                          type="button"
+                          value="Attend Meet"
+                        />
+                      </a>
+                    </div>
                   </form>
                 </li>
                 {% endfor %}

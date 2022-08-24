@@ -141,6 +141,11 @@
                                                     {% endif %}
                                                 </form>
                                                 {% endif %}
+                                                {% if is_user and appointment.reserved %}
+                                                <a href="{{ appointment.counselor.meeting_link }}">
+                                                    <input class="btn btn-primary ml-5" type="button" value="Attend Meet" />
+                                                </a>
+                                                {% endif %}
                                         </li>
                                         {% endfor %}
                                     </ul>
@@ -193,6 +198,11 @@
         </div>
     </div>
 </section>
+<script type="text/javascript">
+    document.getElementById("Attend").onclick = function () {
+        window.location.replace("www.google.com");
+    };
+</script>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/popper.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
