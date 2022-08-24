@@ -3,7 +3,7 @@ from .serializers import UserSerializer, CounselorSerializer, PatientSerializer,
     CommentSerializer
 from rest_framework.views import APIView
 from rest_framework import generics, filters
-from .models import User, Patient, Counselor, Appointment, Reservation
+from .models import User, Patient, Counselor, Appointment, Reservation, Comment
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -11,7 +11,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework import generics, filters
-from .models import User, Patient, Counselor
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -94,10 +93,12 @@ class CounselorProfileview(APIView):
     def get(self, request):
         counselor = Counselor.objects.filter(user=request.user)[0]
         appointments = Appointment.objects.filter(counselor=counselor)
+        comments = Comment.objects.filter(counselor=counselor)
         return render(request, "registration/counselor_profile.html"
                       , context={"counselor": counselor,
                                  "user": request.user,
                                  "appointments": appointments,
+                                 "comments": comments,
                                  "is_user": True})
 
     def post(self, request):
@@ -149,14 +150,30 @@ class CounselorListView(generics.ListAPIView):
         return render(request, "doctors.html", context={'doctors': doctors})
 
     def post(self, request):
+        user = User.objects.filter(username=request.user.username)[0]
+        patient = Patient.objects.filter(user=user)
+        counselor_card = User.objects.filter(username=request.POST.get('doctor'))[0]
+        counselor = Counselor.objects.filter(user=counselor_card)[0]
         if request.data['post'] == "view":
-            user = User.objects.filter(username=request.data['doctor'])[0]
-            counselor = Counselor.objects.filter(user=user)[0]
             appointments = Appointment.objects.filter(counselor=counselor)
+            comments = Comment.objects.filter(counselor=counselor)
+            can_comment = False
+            if patient:
+                reservations = Reservation.objects.filter(patient=patient[0])
+                for r in reservations:
+                    if r.appointment.counselor.user.username == counselor.user.username:
+                        can_comment = True
+                        break
             return render(request, "registration/counselor_profile.html"
                           , context={"counselor": counselor,
                                      "appointments": appointments,
+                                     "comments": comments,
+                                     "can_comment": can_comment,
                                      "is_user": False})
+        elif request.data['post'] == "comment":
+            if request.data['comment'] != "":
+                comment = Comment.objects.create(writer=patient[0], counselor=counselor,text=request.data['comment'])
+                return redirect('/doctors/search/')
         else:
             appointment = Appointment.objects.get(
                 pk=int(re.search('Appointment object \((.*)\)', request.data['appointment']).group(1)))
@@ -166,25 +183,3 @@ class CounselorListView(generics.ListAPIView):
                 appointment.save()
                 reservation = Reservation.objects.create(appointment=appointment, patient=patient)
             return redirect('/accounts/profile/')
-
-
-class AddCommentView(APIView):
-    permission_classes = (IsPatient,)
-
-    def post(self, request, username):
-        crit1 = Q(appointment__counselor__username=username)
-        crit2 = Q(patient__username=username)
-        queryset = Reservation.objects.filter(crit1 & crit2)
-        if queryset:
-            serializer = CommentSerializer(data=request.data, context={'request': request})
-            try:
-                serializer.is_valid(raise_exception=True)
-            except:
-                first_error = list(serializer.errors)[0]
-                return render(request, "registration/profile.html",
-                              {'field': first_error, 'error': serializer.errors[first_error][0]})
-            comment = serializer.create(validated_data=serializer.validated_data)
-        else:
-            return render(request, "registration/profile.html",
-                          {'field': "Comment error", 'error': "You have never had an appointment with this counselor."})
-        return render(request, 'registration/profile.html')

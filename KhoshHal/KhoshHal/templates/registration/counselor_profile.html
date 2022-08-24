@@ -5,27 +5,27 @@
 <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/scheduel.css' %}">
 <section class="contact-section section_padding">
-    <div class="container py-5">    
+    <div class="container py-5">
         <div class="row">
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                             class="rounded-circle img-fluid" style="width: 150px;">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                            alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3">{{ counselor.user.username }}</h5>
                         <div class="d-flex justify-content-center mb-2">
                             {% if is_user %}
-                                <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+                            <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
-<!--                <div class="card mb-4 mb-lg-0">-->
-<!--                    <div class="card-body p-0">-->
-<!--                        <div class="panel-body">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div class="card mb-4 mb-lg-0">-->
+                <!--                    <div class="card-body p-0">-->
+                <!--                        <div class="panel-body">-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
             <div class="col-lg-8">
                 <div class="card mb-4">
@@ -35,7 +35,8 @@
                                 <p class="mb-0">Full Name</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ counselor.user.first_name }} {{ counselor.user.last_name }}</p>
+                                <p class="text-muted mb-0">{{ counselor.user.first_name }}
+                                    {{ counselor.user.last_name }}</p>
                             </div>
                         </div>
                         <hr>
@@ -76,71 +77,113 @@
                     </div>
                 </div>
                 {% if counselor.verified %}
-                <div class="row">
-                    {% if is_user %}
-                    <div class="col-md-6">
-                        <div class="card mb-4 mb-md-0">
-                            <div class="card-body">
-                                <div class="container">
+                <div class="justify-content-center">
+                    <div class="row">
+                        {% comment %} set appointment {% endcomment %}
+                        {% if is_user %}
+                        <div class="col-md-6">
+                            <div class="card mb-4 mb-md-0">
+                                <div class="card-body">
+                                    <div class="container">
                                         <form action="" method="post" class="datepickers">
                                             {% csrf_token %}
                                             <div class="form-group">
                                                 <div class="date form-outline mb-3" id="id_0">
-                                                    <label class="label-control form-label">Select the start of an hour-long session</label>
-                                                    <input type="text" value="" class="form-control col-md-7" name="datetime" placeholder="MM/DD/YYYY hh:mm:ss" required/>
+                                                    <label class="label-control form-label">Select the start of an
+                                                        hour-long
+                                                        session</label>
+                                                    <input type="text" value="" class="form-control col-md-7"
+                                                        name="datetime" placeholder="MM/DD/YYYY hh:mm:ss" required />
                                                 </div>
                                                 <div class="form-outline mb-3">
                                                     <label class="label-control form-label"> Price </label>
-                                                    <input type="number" class="form-control col-md-7" min="10000" step="1000" name="price" />
+                                                    <input type="number" class="form-control col-md-7" min="10000"
+                                                        step="1000" name="price" />
                                                 </div>
-                                                <button
-                                                    type="submit"
-                                                    class="btn btn-primary mx-2 col-md-4"
-                                                    style="padding-left: 1.5rem; padding-right: 1.5rem;"
-                                                >Save
+                                                <button type="submit" class="btn btn-primary mx-2 col-md-4"
+                                                    style="padding-left: 1.5rem; padding-right: 1.5rem;">Save
                                                 </button>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% comment %} view appointments {% endcomment %}
+                        <div class="col-md-6">
+                            <div class="card mb-4 mb-md-0">
+                                <div class="card-body">
+                                    <ul class="list-group-scroll">
+                                        {% for appointment in appointments %}
+                                        <li class="list-group-item">
+                                            {% if appointment.reserved %}
+                                            <strong class="text-success">
+                                                {% else %}
+                                                <strong class="text-danger">
+                                                    {% endif %}
+                                                    {{ appointment.date }}
+                                                </strong>
+                                                <hr>
+                                                <label>
+                                                    {{ appointment.price }} Rials
+                                                </label>
+                                                {% if not is_user %}
+                                                <form method="post" class="d-flex justify-content-center">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="appointment" value="{{ appointment }}" />
+                                                    <input type="hidden" name="doctor"
+                                                        value="{{ counselor.user.username }}" />
+                                                    <input type="hidden" name="post" value="reserve" />
+                                                    {% if not appointment.reserved and user.user_type == 1 %}
+                                                    <button class="btn btn-secondary ml-3"
+                                                        type="submit">Reserve</button>
+                                                    {% endif %}
+                                                </form>
+                                                {% endif %}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {% endif %}
-                    <div class="col-md-6">
-                        <div class="card mb-4 mb-md-0">
-                            <div class="card-body">
-                                <ul class="list-group-scroll">
-                                    {% for appointment in appointments %}
-                                    <li class="list-group-item">
-                                        {% if appointment.reserved %}
-                                        <strong class="text-success">
-                                        {% else %}
-                                            <strong class="text-danger">
+                    <div class="row">
+                        {% comment %} commenrs {% endcomment %}
+                        <div class="container mt-5 card">
+                            <div class="d-flex justify-content-center card-body">
+                                <h5 class="card-header">Comments</h5>
+                                <div class="col-md-8">
+                                    <div class="d-flex flex-column comment-section">
+                                        {% for c in comments %}
+                                        <div class="bg-white p-2">
+                                            <div class="d-flex flex-row user-info">
+                                                <div class="d-flex flex-column justify-content-start ml-2"><span
+                                                        class="font-weight-bold name">{{c.writer.user.first_name}}
+                                                        {{c.writer.user.last_name}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="ml-4">
+                                                <p class="comment-text">{{c.text}}</p>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        {% if can_comment %}
+                                        <form method="post" class="bg-light p-2">
+                                            {% csrf_token %}
+                                            <div class="d-flex flex-row align-items-start">
+                                                <textarea type="text" name="comment"
+                                                    class="form-control ml-1 shadow-none textarea"></textarea></div>
+                                            <input type="hidden" name="post" value="comment" />
+                                            <input type="hidden" name="doctor" value="{{ counselor.user.username }}" />
+                                            <div class="mt-2 text-right">
+                                                <button class="btn btn-primary btn-sm shadow-none" type="submit">Post
+                                                    comment</button>
+                                            </div>
+                                        </form>
                                         {% endif %}
-                                            {{ appointment.date }}
-                                        </strong>
-                                        <hr>
-                                            <label>
-                                                {{ appointment.price }} Rials
-                                            </label>
-                                        {% if not is_user %}
-                                            <form method="post" class="d-flex justify-content-center">
-                                                {% csrf_token %}
-                                                <input type = "hidden" name = "appointment" value = "{{ appointment }}" />
-                                                <input type = "hidden" name = "doctor" value = "{{ counselor.user.username }}" />
-                                                <input type="hidden" name="post" value="reserve" />
-                                                {% if not appointment.reserved and user.user_type == 1 %}
-                                                <button class="btn btn-secondary ml-3" type="submit">Reserve</button>
-                                                {% endif %}
-                                            </form>
-                                        {% endif %}
-                                    </li>
-                                    {% endfor %}
-<!--                                    {% if request.method == 'POST' %}-->
-<!--                                    <li class="list-group-item"><strong>Signature-->
-<!--                                    </li>-->
-<!--                                    {% endif %}-->
-                                </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
