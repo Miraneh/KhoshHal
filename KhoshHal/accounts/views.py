@@ -145,6 +145,13 @@ class CounselorListView(generics.ListAPIView):
     ordering_fields = ['rating', 'specialty']
     ordering = ['user__last_name']
 
+    def get_username(self, request):
+        queryset_counselor = Counselor.objects.all()
+        username = self.request.query_params.get("username")
+        if username is not None:
+            queryset_counselor = queryset_counselor.objects.filter(user__username=username)
+        return queryset_counselor
+
     def get(self, request):
         # doctors = Counselor.objects.all()
         return render(request, "doctors.html", context={'doctors': self.get_queryset()})
@@ -172,7 +179,7 @@ class CounselorListView(generics.ListAPIView):
                                      "is_user": False})
         elif request.data['post'] == "comment":
             if request.data['comment'] != "":
-                comment = Comment.objects.create(writer=patient[0], counselor=counselor,text=request.data['comment'])
+                comment = Comment.objects.create(writer=patient[0], counselor=counselor, text=request.data['comment'])
                 return redirect('/doctors/search/')
         else:
             appointment = Appointment.objects.get(
