@@ -1,8 +1,15 @@
+
 {% extends "base.html" %} {% load static %} {% block title %}Doctors{%endblock%}
 {% block content %}
 <div class="container padding_bottom">
   <div class="card-deck">
     <section class="contact-section section_padding">
+      <div class="input-group">
+        <input id="username" type="search" class="form-control rounded" placeholder="Username" aria-label="Search" aria-describedby="search-addon" />
+        <input id="specialty" type="search" class="form-control rounded" placeholder="Specialty" aria-label="Search" aria-describedby="search-addon" />
+        <input id="firstname" type="search" class="form-control rounded" placeholder="First Name" aria-label="Search" aria-describedby="search-addon" />
+        <button id="search" type="button" class="btn btn-outline-primary">search</button>
+      </div>
       {% for doctor in doctors %} {% if forloop.first %}
       <div class="row my-3">
         {% endif %}
@@ -55,4 +62,22 @@
     </div>
   </div>
 </div>
+<script>
+  document.getElementById("search").onclick = function () {
+    var name = document.getElementById("username").value;
+    var specialty = document.getElementById("specialty").value;
+    var firstname = document.getElementById("firstname").value;
+    var link = "http://127.0.0.1:8000/doctors/search/?";
+    if (!(name === "")) {
+      link += "user__username=" + name + "&";
+    }
+    if (!(specialty === "")) {
+      link += "specialty=" + specialty + "&";
+    }
+    if (!(firstname === "")) {
+      link += "user__first_name=" + firstname + "&";
+    }
+    window.location.replace(link);
+  };
+</script>
 {% endblock %}
