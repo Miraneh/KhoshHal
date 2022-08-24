@@ -153,9 +153,16 @@ class CounselorListView(generics.ListAPIView):
     ordering_fields = ['rating', 'specialty']
     ordering = ['user__last_name']
 
+    def get_username(self, request):
+        self.queryset = Counselor.objects.all()
+        for i in self.search_fields:
+            if i in request.query_params.keys():
+                self.queryset = self.queryset.filter(**{i: request.query_params.get(i)})
+        return self.queryset                
+
     def get(self, request):
         # doctors = Counselor.objects.all()
-        return render(request, "doctors.html", context={'doctors': self.get_queryset()})
+        return render(request, "doctors.html", context={'doctors': self.get_username(request)})
 
     def post(self, request):
         user = User.objects.filter(username=request.user.username)[0]

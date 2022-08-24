@@ -37,6 +37,7 @@ class Counselor(models.Model):
     verified = models.BooleanField(default=False)
     rating = models.DecimalField(max_digits=2, decimal_places=1,
                                  validators=[MinValueValidator(0), MaxValueValidator(5)], blank=True, null=True)
+    meeting_link = models.URLField(max_length=2000, blank=True, null=False)
 
 
 class Patient(models.Model):
@@ -46,6 +47,7 @@ class Patient(models.Model):
 
 class Appointment(models.Model):
     objects = models.Manager()
+    counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE, primary_key=False)
     counselor = models.ForeignKey(Counselor, on_delete=models.CASCADE, primary_key=False)
     date = models.DateTimeField(blank=True, null=True)
     price = models.PositiveIntegerField(default=50000)
